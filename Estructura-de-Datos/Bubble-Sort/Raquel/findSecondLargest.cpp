@@ -1,3 +1,6 @@
+
+//Encuentra el segundo número más grande de una lista mientras usas el algoritmo.
+
 #include <iostream>
 #include <vector>
 #include <limits>
