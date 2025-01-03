@@ -1,3 +1,8 @@
+/*
+Implementa una función que acepte una lista y una función de comparación 
+personalizada (por ejemplo, mayor o menor) para usar en el algoritmo de inserción.
+*/
+
 #include <iostream>
 using namespace std;
 
