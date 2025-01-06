@@ -1,0 +1,513 @@
+Title: Clean Code: A Handbook of Agile Software Craftsmanship
+Author: Robert C. Martin
+Genre: Programación
+Year: 2008
+ISBN: 978-0132350884
+Keywords: código limpio, programación, desarrollo ágil
+Qualification: 4.7
+Link: https://www.goodreads.com/book/show/3735293-clean-code
+
+Title: The Pragmatic Programmer
+Author: Andrew Hunt, David Thomas
+Genre: Programación
+Year: 1999
+ISBN: 978-0201616224
+Keywords: pragmatismo, programación, software
+Qualification: 4.6
+Link: https://www.goodreads.com/book/show/4099.The_Pragmatic_Programmer
+
+Title: Domain-Driven Design: Tackling Complexity in the Heart of Software
+Author: Eric Evans
+Genre: Programación
+Year: 2003
+ISBN: 978-0321125217
+Keywords: diseño de dominio, complejidad, software
+Qualification: 4.4
+Link: https://www.goodreads.com/book/show/179133.Domain_Driven_Design
+
+Title: Code Complete
+Author: Steve McConnell
+Genre: Programación
+Year: 2004
+ISBN: 978-0735619678
+Keywords: programación, código, desarrollo de software
+Qualification: 4.5
+Link: https://www.goodreads.com/book/show/4845.Code_Complete
+
+Title: Refactoring: Improving the Design of Existing Code
+Author: Martin Fowler
+Genre: Programación
+Year: 1999
+ISBN: 978-0201485677
+Keywords: refactorización, diseño, código
+Qualification: 4.6
+Link: https://www.goodreads.com/book/show/44936.Refactoring
+
+Title: Practical Object-Oriented Design in Ruby
+Author: Sandi Metz
+Genre: Programación
+Year: 2012
+ISBN: 978-0321721334
+Keywords: Ruby, diseño orientado a objetos, programación
+Qualification: 4.5
+Link: https://www.goodreads.com/book/show/13507765-practical-object-oriented-design-in-ruby
+
+Title: The Art of Computer Programming
+Author: Donald Knuth
+Genre: Programación
+Year: 1968
+ISBN: 978-0201896845
+Keywords: algoritmos, programación, arte
+Qualification: 4.7
+Link: https://www.goodreads.com/book/show/24153.The_Art_of_Computer_Programming
+
+Title: The C Programming Language
+Author: Brian W. Kernighan, Dennis M. Ritchie
+Genre: Programación
+Year: 1978
+ISBN: 978-0131103627
+Keywords: lenguaje C, programación, software
+Qualification: 4.5
+Link: https://www.goodreads.com/book/show/515601.The_C_Programming_Language
+
+Title: JavaScript: The Good Parts
+Author: Douglas Crockford
+Genre: Programación
+Year: 2008
+ISBN: 978-0596517748
+Keywords: JavaScript, buenas prácticas, web
+Qualification: 4.3
+Link: https://www.goodreads.com/book/show/2998152-javascript
+
+Title: Harry Potter y la piedra filosofal
+Author: J.K. Rowling
+Genre: Fantasía
+Year: 1997
+ISBN: 978-0747532699
+Keywords: magia, aventura, Harry Potter
+Qualification: 4.5
+Link: https://www.goodreads.com/book/show/3.Harry_Potter_and_the_Sorcerer_s_Stone
+
+Title: El señor de los anillos
+Author: J.R.R. Tolkien
+Genre: Fantasía
+Year: 1954
+ISBN: 978-0261102385
+Keywords: aventura, fantasía, anillos
+Qualification: 4.8
+Link: https://www.goodreads.com/book/show/33.The_Lord_of_the_Rings
+
+Title: 1984
+Author: George Orwell
+Genre: Ciencia ficción, distopía
+Year: 1949
+ISBN: 978-0451524935
+Keywords: distopía, política, Big Brother
+Qualification: 4.7
+Link: https://www.goodreads.com/book/show/5470.1984
+
+Title: Cien años de soledad
+Author: Gabriel García Márquez
+Genre: Realismo mágico
+Year: 1967
+ISBN: 978-0060883287
+Keywords: soledad, realismo mágico, familia
+Qualification: 4.6
+Link: https://www.goodreads.com/book/show/320.One_Hundred_Years_of_Solitude
+
+Title: Matar a un ruiseñor
+Author: Harper Lee
+Genre: Ficción histórica
+Year: 1960
+ISBN: 978-0061120084
+Keywords: racismo, justicia, infancia
+Qualification: 4.3
+Link: https://www.goodreads.com/book/show/2657.To_Kill_a_Mockingbird
+
+Title: El gran Gatsby
+Author: F. Scott Fitzgerald
+Genre: Clásico
+Year: 1925
+ISBN: 978-0743273565
+Keywords: amor, decadencia, jazz
+Qualification: 3.9
+Link: https://www.goodreads.com/book/show/4671.The_Great_Gatsby
+
+Title: Orgullo y prejuicio
+Author: Jane Austen
+Genre: Clásico
+Year: 1813
+ISBN: 978-0141040349
+Keywords: amor, sociedad, orgullo
+Qualification: 4.3
+Link: https://www.goodreads.com/book/show/1885.Pride_and_Prejudice
+
+Title: Don Quijote de la Mancha
+Author: Miguel de Cervantes
+Genre: Clásico
+Year: 1605
+ISBN: 978-0060934347
+Keywords: aventuras, caballería, Quijote
+Qualification: 4.1
+Link: https://www.goodreads.com/book/show/3836.Don_Quixote
+
+Title: El guardián entre el centeno
+Author: J.D. Salinger
+Genre: Ficción
+Year: 1951
+ISBN: 978-0316769488
+Keywords: adolescencia, identidad, rebelde
+Qualification: 3.8
+Link: https://www.goodreads.com/book/show/5107.The_Catcher_in_the_Rye
+
+Title: Las aventuras de Huckleberry Finn
+Author: Mark Twain
+Genre: Aventura
+Year: 1884
+ISBN: 978-0486280615
+Keywords: aventura, Mississippi, esclavitud
+Qualification: 4.1
+Link: https://www.goodreads.com/book/show/2956.The_Adventures_of_Huckleberry_Finn
+
+Title: Moby Dick
+Author: Herman Melville
+Genre: Aventura
+Year: 1851
+ISBN: 978-1503280786
+Keywords: ballenas, aventura, océano
+Qualification: 3.5
+Link: https://www.goodreads.com/book/show/153747.Moby_Dick
+
+Title: Guerra y paz
+Author: Leo Tolstoy
+Genre: Clásico
+Year: 1869
+ISBN: 978-0199536056
+Keywords: historia, familia, Rusia
+Qualification: 4.2
+Link: https://www.goodreads.com/book/show/656.War_and_Peace
+
+Title: Cometas en el cielo
+Author: Khaled Hosseini
+Genre: Ficción
+Year: 2003
+ISBN: 978-1594631931
+Keywords: amistad, Afganistán, redención
+Qualification: 4.3
+Link: https://www.goodreads.com/book/show/77203.The_Kite_Runner
+
+Title: Frankenstein
+Author: Mary Shelley
+Genre: Gótico, ciencia ficción
+Year: 1818
+ISBN: 978-0486282114
+Keywords: monstruo, creación, científico
+Qualification: 3.8
+Link: https://www.goodreads.com/book/show/35031085-frankenstein
+
+Title: Crimen y castigo
+Author: Fyodor Dostoevsky
+Genre: Clásico
+Year: 1866
+ISBN: 978-0143107637
+Keywords: crimen, culpa, Rusia
+Qualification: 4.2
+Link: https://www.goodreads.com/book/show/7144.Crime_and_Punishment
+
+Title: Cumbres borrascosas
+Author: Emily Brontë
+Genre: Gótico
+Year: 1847
+ISBN: 978-0141439556
+Keywords: amor, venganza, tragedia
+Qualification: 3.9
+Link: https://www.goodreads.com/book/show/6185.Wuthering_Heights
+
+Title: Grandes esperanzas
+Author: Charles Dickens
+Genre: Clásico
+Year: 1860
+ISBN: 978-0141439563
+Keywords: crecimiento, responsabilidad, Inglaterra
+Qualification: 3.8
+Link: https://www.goodreads.com/book/show/2623.Great_Expectations
+
+Title: La letra escarlata
+Author: Nathaniel Hawthorne
+Genre: Clásico
+Year: 1850
+ISBN: 978-0486280486
+Keywords: pecado, castigo, puritanismo
+Qualification: 3.4
+Link: https://www.goodreads.com/book/show/12296.The_Scarlet_Letter
+
+Title: Fahrenheit 451
+Author: Ray Bradbury
+Genre: Ciencia ficción, distopía
+Year: 1953
+ISBN: 978-1451673319
+Keywords: censura, fuego, futuro
+Qualification: 4.0
+Link: https://www.goodreads.com/book/show/13079982-fahrenheit-451
+
+Title: El viejo y el mar
+Author: Ernest Hemingway
+Genre: Ficción
+Year: 1952
+ISBN: 978-0684801223
+Keywords: perseverancia, océano, pesca
+Qualification: 3.8
+Link: https://www.goodreads.com/book/show/2165.The_Old_Man_and_the_Sea
+
+Title: La iliada
+Author: Homer
+Genre: Épico
+Year: -750
+ISBN: 978-0140275360
+Keywords: guerra, Troya, épico
+Qualification: 4.0
+Link: https://www.goodreads.com/book/show/1371.The_Iliad
+
+Title: La divina comedia
+Author: Dante Alighieri
+Genre: Poesía
+Year: 1320
+ISBN: 978-0142437222
+Keywords: infierno, peregrinación, poesía
+Qualification: 4.2
+Link: https://www.goodreads.com/book/show/172932.The_Divine_Comedy
+
+Title: El arte de la guerra
+Author: Sun Tzu
+Genre: Filosofía
+Year: -500
+ISBN: 978-1599869773
+Keywords: estrategia, guerra, filosofía
+Qualification: 4.3
+Link: https://www.goodreads.com/book/show/10534.The_Art_of_War
+
+Title: Un mundo feliz
+Author: Aldous Huxley
+Genre: Ciencia ficción, distopía
+Year: 1932
+ISBN: 978-0060850524
+Keywords: futuro, distopía, sociedad
+Qualification: 4.0
+Link: https://www.goodreads.com/book/show/5129.Brave_New_World
+
+Title: La metamorfosis
+Author: Franz Kafka
+Genre: Ficción
+Year: 1915
+ISBN: 978-0805210576
+Keywords: transformación, absurdo, existencial
+Qualification: 4.0
+Link: https://www.goodreads.com/book/show/485894.The_Metamorphosis
+
+Title: El principito
+Author: Antoine de Saint-Exupéry
+Genre: Fábula
+Year: 1943
+ISBN: 978-0156012195
+Keywords: niño, aventura, filosofía
+Qualification: 4.3
+Link: https://www.goodreads.com/book/show/157993.The_Little_Prince
+
+Title: Walden
+Author: Henry David Thoreau
+Genre: Filosofía
+Year: 1854
+ISBN: 978-0140183492
+Keywords: naturaleza, filosofía, simplicidad
+Qualification: 4.1
+Link: https://www.goodreads.com/book/show/16902.Walden
+
+Title: Ana Karenina
+Author: Leo Tolstoy
+Genre: Clásico
+Year: 1877
+ISBN: 978-0143035008
+Keywords: amor, Rusia, tragedia
+Qualification: 4.1
+Link: https://www.goodreads.com/book/show/15823480-anna-karenina
+
+Title: Juego de tronos
+Author: George R.R. Martin
+Genre: Fantasía
+Year: 1996
+ISBN: 978-0553386790
+Keywords: tronos, dragones, guerra
+Qualification: 4.5
+Link: https://www.goodreads.com/book/show/13496.A_Game_of_Thrones
+
+Title: Sherlock Holmes: Estudio en escarlata
+Author: Arthur Conan Doyle
+Genre: Misterio
+Year: 1887
+ISBN: 978-0451528018
+Keywords: detective, asesinato, Londres
+Qualification: 4.1
+Link: https://www.goodreads.com/book/show/102868.Study_in_Scarlet
+
+Title: Hamlet
+Author: William Shakespeare
+Genre: Tragedia
+Year: 1603
+ISBN: 978-0743477123
+Keywords: venganza, tragedia, Dinamarca
+Qualification: 4.0
+Link: https://www.goodreads.com/book/show/1420.Hamlet
+
+Title: La Odisea
+Author: Homero
+Genre: Épico
+Year: -700
+ISBN: 978-0140268867
+Keywords: aventuras, Odiseo, épico
+Qualification: 4.0
+Link: https://www.goodreads.com/book/show/1381.The_Odyssey
+
+Title: Diez negritos
+Author: Agatha Christie
+Genre: Misterio
+Year: 1939
+ISBN: 978-0062073488
+Keywords: asesinato, misterio, isla
+Qualification: 4.3
+Link: https://www.goodreads.com/book/show/16299.And_Then_There_Were_None
+
+Title: Los miserables
+Author: Victor Hugo
+Genre: Clásico
+Year: 1862
+ISBN: 978-0451419439
+Keywords: revolución, justicia, Francia
+Qualification: 4.4
+Link: https://www.goodreads.com/book/show/24280.Les_Miserables
+
+Title: Rebelión en la granja
+Author: George Orwell
+Genre: Ficción, política
+Year: 1945
+ISBN: 978-0451526344
+Keywords: revolución, animales, política
+Qualification: 3.9
+Link: https://www.goodreads.com/book/show/7613.Animal_Farm
+
+Title: Madame Bovary
+Author: Gustave Flaubert
+Genre: Clásico
+Year: 1856
+ISBN: 978-0140449129
+Keywords: matrimonio, sociedad, tragedia
+Qualification: 3.6
+Link: https://www.goodreads.com/book/show/2175.Madame_Bovary
+
+Title: Siddhartha
+Author: Herman Hesse
+Genre: Filosofía
+Year: 1922
+ISBN: 978-0553208849
+Keywords: espiritualidad, búsqueda, vida
+Qualification: 4.1
+Link: https://www.goodreads.com/book/show/52036.Siddhartha
+
+Title: Alicia en el país de las maravillas
+Author: Lewis Carroll
+Genre: Fantasía
+Year: 1865
+ISBN: 978-0486275437
+Keywords: aventura, surrealismo, fantasía
+Qualification: 4.1
+Link: https://www.goodreads.com/book/show/24213.Alice_s_Adventures_in_Wonderland
+
+Title: Las uvas de la ira
+Author: John Steinbeck
+Genre: Ficción
+Year: 1939
+ISBN: 978-0143039433
+Keywords: depresión, migración, esperanza
+Qualification: 4.2
+Link: https://www.goodreads.com/book/show/4395.The_Grapes_of_Wrath
+
+Title: Tess of the d'Urbervilles
+Author: Thomas Hardy
+Genre: Clásico
+Year: 1891
+ISBN: 978-0141040332
+Keywords: amor, tragedia, sociedad
+Qualification: 3.8
+Link: https://www.goodreads.com/book/show/32261.Tess_of_the_d_Urbervilles
+
+Title: Notre-Dame de París
+Author: Victor Hugo
+Genre: Clásico
+Year: 1831
+ISBN: 978-1853260681
+Keywords: París, catedral, amor
+Qualification: 4.2
+Link: https://www.goodreads.com/book/show/30597.The_Hunchback_of_Notre_Dame
+
+Title: El extranjero
+Author: Albert Camus
+Genre: Filosofía, existencialismo
+Year: 1942
+ISBN: 978-0679720201
+Keywords: asesinato, absurdo, vida
+Qualification: 4.0
+Link: https://www.goodreads.com/book/show/49552.The_Stranger
+
+Title: El retrato de Dorian Gray
+Author: Oscar Wilde
+Genre: Fantasía
+Year: 1890
+ISBN: 978-0141439570
+Keywords: juventud, belleza, moral
+Qualification: 4.1
+Link: https://www.goodreads.com/book/show/5297.The_Picture_of_Dorian_Gray
+
+Title: Sapiens: A Brief History of Humankind
+Author: Yuval Noah Harari
+Genre: Historia
+Year: 2011
+ISBN: 978-0062316110
+Keywords: historia, humanidad, evolución, sociedad
+Qualification: 5
+Link: https://www.goodreads.com/book/show/23692271-sapiens
+
+Title: The Handmaid's Tale
+Author: Margaret Atwood
+Genre: Ficción distópica
+Year: 1985
+ISBN: 978-0385490818
+Keywords: distopía, feminismo, religión, política
+Qualification: 5
+Link: https://www.goodreads.com/book/show/38447.The_Handmaid_s_Tale
+
+Title: Una habitación propia
+Author: Virginia Woolf
+Genre: Ensayo
+Year: 1929
+ISBN: 978-0151787333
+Keywords: feminismo, literatura, independencia
+Qualification: 4.2
+Link: https://www.goodreads.com/book/show/18521.A_Room_of_One_s_Own
+
+Title: The Hitchhiker's Guide to the Galaxy
+Author: Douglas Adams
+Genre: Ciencia ficción
+Year: 1979
+ISBN: 978-0345391803
+Keywords: espacio, humor, aventuras, alienígenas
+Qualification: 5
+Link: https://www.goodreads.com/book/show/11.The_Hitchhiker_s_Guide_to_the_Galaxy
+
+Title: El origen de las especies
+Author: Charles Darwin
+Genre: Ciencia
+Year: 1859
+ISBN: 978-0553214635
+Keywords: evolución, ciencia, especies
+Qualification: 4.2
+Link: https://www.goodreads.com/book/show/22463.On_the_Origin_of_Species
+
