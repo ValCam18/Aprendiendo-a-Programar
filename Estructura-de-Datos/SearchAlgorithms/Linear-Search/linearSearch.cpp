@@ -20,7 +20,8 @@ struct Book
 
 // Declaración de las funciones
 void addBookToCSV(const string &inventory, const Book &book);
-bool findBookInCSV(const string &inventory, const string &searchTerm, Book &foundBook);
+void findBookInCSV(const string &inventory, const string &searchTerm, vector<Book> &searchResult);
+bool containsSearchTerm(Book book, string searchTerm);
 bool deleteBookFromCSV(const string &inventory, const string &searchTerm);
 void showMenu(const string &inventory);
 
@@ -60,17 +61,26 @@ void addBookToCSV(const string &inventory, const Book &book)
     }
 }
 
-bool findBookInCSV(const string &inventory, const string &searchTerm, Book &foundBook)
+void findBookInCSV(const string &inventory, const string &searchTerm, vector<Book> &searchResult)
 {
     ifstream file(inventory);
     if (!file)
     {
         cerr << "Error: Unable to open file.\n";
-        return false;
+        return;
     }
 
     string line;
-    bool found = false;
+    Book book;
+
+    /*string title = "Title: ";
+    string author = "Author: ";
+    string genre = "Genre: ";
+    string year = "Year: ";
+    string ISBN = "ISBN: ";
+    string keywords = "Keywords: ";
+    string qualification = "Qualification: ";
+    string link = "Link: ";*/
 
     while (getline(file, line))
     {
@@ -98,28 +108,28 @@ bool findBookInCSV(const string &inventory, const string &searchTerm, Book &foun
                 switch (column)
                 {
                 case 0:
-                    foundBook.title = field;
+                    book.title = field;
                     break;
                 case 1:
-                    foundBook.author = field;
+                    book.author = field;
                     break;
                 case 2:
-                    foundBook.genre = field;
+                    book.genre = field;
                     break;
                 case 3:
-                    foundBook.year = field;
+                    book.year = field;
                     break;
                 case 4:
-                    foundBook.ISBN = field;
+                    book.ISBN = field;
                     break;
                 case 5:
-                    foundBook.keywords = field;
+                    book.keywords = field;
                     break;
                 case 6:
-                    foundBook.qualification = field;
+                    book.qualification = field;
                     break;
                 case 7:
-                    foundBook.link = field;
+                    book.link = field;
                     break;
                 }
 
@@ -137,51 +147,57 @@ bool findBookInCSV(const string &inventory, const string &searchTerm, Book &foun
             switch (column)
             {
             case 0:
-                foundBook.title = currentField;
+                book.title = currentField;
                 break;
             case 1:
-                foundBook.author = currentField;
+                book.author = currentField;
                 break;
             case 2:
-                foundBook.genre = currentField;
+                book.genre = currentField;
                 break;
             case 3:
-                foundBook.year = currentField;
+                book.year = currentField;
                 break;
             case 4:
-                foundBook.ISBN = currentField;
+                book.ISBN = currentField;
                 break;
             case 5:
-                foundBook.keywords = currentField;
+                book.keywords = currentField;
                 break;
             case 6:
-                foundBook.qualification = currentField;
+                book.qualification = currentField;
                 break;
             case 7:
-                foundBook.link = currentField;
+                book.link = currentField;
                 break;
             }
 
             column++;
         }
-
-        // Verifica si la palabra de búsqueda aparece en cualquiera de los atributos
-        if (foundBook.title.find(searchTerm) != string::npos ||
-            foundBook.author.find(searchTerm) != string::npos ||
-            foundBook.genre.find(searchTerm) != string::npos ||
-            foundBook.year.find(searchTerm) != string::npos ||
-            foundBook.ISBN.find(searchTerm) != string::npos ||
-            foundBook.keywords.find(searchTerm) != string::npos ||
-            foundBook.qualification.find(searchTerm) != string::npos ||
-            foundBook.link.find(searchTerm) != string::npos)
+        if (containsSearchTerm(book, searchTerm))
         {
-            found = true;
-            break;
+            searchResult.push_back(book);
         }
     }
 
     file.close();
-    return found;
+}
+
+bool containsSearchTerm(Book book, string searchTerm)
+{
+    // Verifica si la palabra de búsqueda aparece en cualquiera de los atributos
+    if (book.title.find(searchTerm) != string::npos ||
+        book.author.find(searchTerm) != string::npos ||
+        book.genre.find(searchTerm) != string::npos ||
+        book.year.find(searchTerm) != string::npos ||
+        book.ISBN.find(searchTerm) != string::npos ||
+        book.keywords.find(searchTerm) != string::npos ||
+        book.qualification.find(searchTerm) != string::npos ||
+        book.link.find(searchTerm) != string::npos)
+    {
+        return true;
+    }
+    return false;
 }
 
 bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
@@ -278,26 +294,26 @@ void showMenu(const string &inventory)
             string searchTerm;
             cout << "Enter search term: ";
             getline(cin, searchTerm);
+            vector<Book> searchResult;
 
-            Book foundBook;
-            bool found = findBookInCSV(inventory, searchTerm, foundBook);
-
-            if (found)
+            findBookInCSV(inventory, searchTerm, searchResult);
+            if (searchResult.size() > 0)
             {
-                cout << "Book found: \n";
-                cout << "Title: " << foundBook.title << "\n";
-                cout << "Author: " << foundBook.author << "\n";
-                cout << "Genre: " << foundBook.genre << "\n";
-                cout << "Year: " << foundBook.year << "\n";
-                cout << "ISBN: " << foundBook.ISBN << "\n";
-                cout << "Keywords: " << foundBook.keywords << "\n";
-                cout << "Qualification: " << foundBook.qualification << "\n";
-                cout << "Link: " << foundBook.link << "\n";
+                for (Book book : searchResult)
+                {
+                    cout << "Title: " << book.title << endl;
+                    cout << "Author: " << book.author << endl;
+                    cout << "Genre: " << book.genre << endl;
+                    cout << "Year: " << book.year << endl;
+                    cout << "ISBN: " << book.ISBN << endl;
+                    cout << "Keywords: " << book.keywords << endl;
+                    cout << "Qualification: " << book.qualification << endl;
+                    cout << "Link: " << book.link << endl;
+                    cout << "-----------------------------------" << endl;
+                }
             }
-            else
-            {
-                cout << "Book not found.\n";
-            }
+            cout << "Books found: " << searchResult.size() << endl;
+            cout << "-----------------------------------" << endl;
             break;
         }
         case 3:
