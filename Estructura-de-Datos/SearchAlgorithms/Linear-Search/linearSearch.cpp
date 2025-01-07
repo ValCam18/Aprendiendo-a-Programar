@@ -20,7 +20,7 @@ struct Book
 
 // Declaración de las funciones
 void addBookToCSV(const string &inventory, const Book &book);
-void findBookInCSV(const string &inventory, const string &searchTerm, Book &foundBook);
+void findBookInCSV(const string &inventory, const string &searchTerm, vector<Book> &searchResult);
 bool containsSearchTerm(Book book, string searchTerm);
 bool deleteBookFromCSV(const string &inventory, const string &searchTerm);
 void showMenu(const string &inventory);
