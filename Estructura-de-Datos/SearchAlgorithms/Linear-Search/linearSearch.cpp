@@ -1,10 +1,13 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
-#include <limits>
+#include <sstream>
+#include <stdexcept>
+#include <vector>
 using namespace std;
 
-struct Book {
+struct Book
+{
     string title;
     string author;
     string genre;
@@ -15,112 +18,53 @@ struct Book {
     string link;
 };
 
-void addBook(const string &inventory, const Book &bookdetails);
-bool searchBook(const string &inventory, const string &title, Book &foundBook);
+// Declaración de las funciones
+void addBookToCSV(const string &inventory, const Book &book);
+bool findBookInCSV(const string &inventory, const string &searchTerm, Book &foundBook);
+bool deleteBookFromCSV(const string &inventory, const string &searchTerm);
+void showMenu(const string &inventory);
 
-int main() {
-
-    int choice;
-    Book bookdetails, foundBook;
-    string inventory = "inventory.txt";
-    string searchTitle;
-    
-    do {
-
-        cout << "----Virtual Library----" << endl;
-        cout << "1. Search for a book" << endl;
-        cout << "2. Add a book" << endl;
-        cout << "3. Exit" << endl;
-        cout << "Enter your choice: ";
-        
-        cin >> choice;
-        cin.ignore();
-
-        if(cin.fail()) {
-            cout << "Invalid entry." << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            continue;
-        }
-
-        switch (choice){
-            case 1: 
-                cout << "Enter the title of the book to search: ";
-                getline(cin, searchTitle);
-                if (searchBook(inventory, searchTitle, foundBook)){
-                    cout << "Book found." << endl;
-                    cout << "Title: " << foundBook.title << endl;
-                    cout << "Author: " << foundBook.author << endl;
-                    cout << "Genre: " << foundBook.genre << endl;
-                    cout << "Year: " << foundBook.year << endl;
-                    cout << "ISBN: " << foundBook.ISBN << endl;
-                    cout << "Keywords: " << foundBook.keywords << endl;
-                    cout << "Qualification: " << foundBook.qualification << endl;
-                    cout << "Link: " << foundBook.link << endl;
-                    cout << "-----------------------------------" << endl;
-                } else {
-                    cout << "Book not found." << endl;
-                }
-                cout << "-----------------------------------" << endl;
-                break;
-            case 2: 
-                cout << "Enter the title of the book: ";
-                getline(cin, bookdetails.title);
-                cout << "Enter the author of the book: ";
-                getline(cin, bookdetails.author);
-                cout << "Enter the genre of the book: ";
-                getline(cin, bookdetails.genre);
-                cout << "Enter the year of the book: ";
-                getline(cin, bookdetails.year);
-                cout << "Enter the ISBN of the book: ";
-                getline(cin, bookdetails.ISBN);
-                cout << "Enter the keywords of the book: ";
-                getline(cin, bookdetails.keywords);
-                cout << "Enter the qualification of the book: ";
-                getline(cin, bookdetails.qualification);
-                cout << "Enter the link of the book: ";
-                getline(cin, bookdetails.link);
-                addBook(inventory, bookdetails);
-                cout << "-----------------------------------" << endl;
-                break;
-            case 3:
-                cout << "Exiting the program..." << endl;
-                break;
-            default:
-                cout << "Invalid choice. Please try again." << endl;
-                break;
-            }
-    } while (choice != 3);
-    
-return 0;
+int main()
+{
+    string inventory = "inventory.csv"; // Ruta al archivo CSV
+    showMenu(inventory);
+    return 0;
 }
 
-void addBook(const string &inventory, const Book &bookdetails){
-    
-    try{
-       ofstream file(inventory, ios::app);
-       if (file.is_open()){
-       file << "Title: " << bookdetails.title << endl;
-       file << "Author: " << bookdetails.author << endl;
-       file << "Genre: " << bookdetails.genre << endl;
-       file << "Year: " << bookdetails.year << endl;
-       file << "ISBN: " << bookdetails.ISBN << endl;
-       file << "Keywords: " << bookdetails.keywords << endl;
-       file << "Qualification: " << bookdetails.qualification << endl;
-       file << "Link: " << bookdetails.link << endl << endl;
-       file.close();
-       cout << "Book added successfully." << endl;
-       } else {
-       throw runtime_error("Error: Unable to open file.");
-       }
-    } catch(const exception& e){
-       cerr << "Error: " << e.what() << endl;
+void addBookToCSV(const string &inventory, const Book &book)
+{
+    try
+    {
+        ofstream file(inventory, ios::app); // Abre el archivo en modo append
+        if (file.is_open())
+        {
+            file << "\"" << book.title << "\","
+                 << "\"" << book.author << "\","
+                 << "\"" << book.genre << "\","
+                 << "\"" << book.year << "\","
+                 << "\"" << book.ISBN << "\","
+                 << "\"" << book.keywords << "\","
+                 << "\"" << book.qualification << "\","
+                 << "\"" << book.link << "\"\n"; // Agrega la nueva línea para el libro
+            file.close();
+            cout << "Book added successfully." << endl;
+        }
+        else
+        {
+            throw runtime_error("Error: Unable to open file.");
+        }
+    }
+    catch (const exception &e)
+    {
+        cerr << "Error: " << e.what() << endl;
     }
 }
 
-bool searchBook(const string &inventory, const string &title, Book &foundBook) {
+bool findBookInCSV(const string &inventory, const string &searchTerm, Book &foundBook)
+{
     ifstream file(inventory);
-    if (!file) {
+    if (!file)
+    {
         cerr << "Error: Unable to open file.\n";
         return false;
     }
@@ -128,31 +72,249 @@ bool searchBook(const string &inventory, const string &title, Book &foundBook) {
     string line;
     bool found = false;
 
-    while (getline(file, line)) {
-        if (line.find("Title: ") == 0 && line.substr(7) == title) { // Busca el título
-            found = true;
-            foundBook.title = title;
-            // Extrae el resto de los campos
-            while (getline(file, line) && !line.empty()) {
-                if (line.find("Author: ") == 0)
-                    foundBook.author = line.substr(8);
-                else if (line.find("Genre: ") == 0)
-                    foundBook.genre = line.substr(7);
-                else if (line.find("Year: ") == 0)
-                    foundBook.year = line.substr(6);
-                else if (line.find("ISBN: ") == 0)
-                    foundBook.ISBN = line.substr(6);
-                else if (line.find("Keywords: ") == 0)
-                    foundBook.keywords = line.substr(10);
-                else if (line.find("Qualification: ") == 0)
-                    foundBook.qualification = line.substr(14);
-                else if (line.find("Link: ") == 0)
-                    foundBook.link = line.substr(6);
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string field;
+        int column = 0;
+
+        // Manejo de comillas
+        bool inQuotes = false;
+        string currentField = "";
+
+        for (char c : line)
+        {
+            if (c == '"')
+            {
+                inQuotes = !inQuotes; // Toggle quotes
             }
+            else if (c == ',' && !inQuotes)
+            {
+                // Si no estamos dentro de comillas, separamos por coma
+                field = currentField;
+                currentField.clear();
+
+                // Asigna el campo correspondiente
+                switch (column)
+                {
+                case 0:
+                    foundBook.title = field;
+                    break;
+                case 1:
+                    foundBook.author = field;
+                    break;
+                case 2:
+                    foundBook.genre = field;
+                    break;
+                case 3:
+                    foundBook.year = field;
+                    break;
+                case 4:
+                    foundBook.ISBN = field;
+                    break;
+                case 5:
+                    foundBook.keywords = field;
+                    break;
+                case 6:
+                    foundBook.qualification = field;
+                    break;
+                case 7:
+                    foundBook.link = field;
+                    break;
+                }
+
+                column++;
+            }
+            else
+            {
+                currentField += c; // Acumula el carácter en el campo actual
+            }
+        }
+
+        // Para el último campo
+        if (!currentField.empty())
+        {
+            switch (column)
+            {
+            case 0:
+                foundBook.title = currentField;
+                break;
+            case 1:
+                foundBook.author = currentField;
+                break;
+            case 2:
+                foundBook.genre = currentField;
+                break;
+            case 3:
+                foundBook.year = currentField;
+                break;
+            case 4:
+                foundBook.ISBN = currentField;
+                break;
+            case 5:
+                foundBook.keywords = currentField;
+                break;
+            case 6:
+                foundBook.qualification = currentField;
+                break;
+            case 7:
+                foundBook.link = currentField;
+                break;
+            }
+
+            column++;
+        }
+
+        // Verifica si la palabra de búsqueda aparece en cualquiera de los atributos
+        if (foundBook.title.find(searchTerm) != string::npos ||
+            foundBook.author.find(searchTerm) != string::npos ||
+            foundBook.genre.find(searchTerm) != string::npos ||
+            foundBook.year.find(searchTerm) != string::npos ||
+            foundBook.ISBN.find(searchTerm) != string::npos ||
+            foundBook.keywords.find(searchTerm) != string::npos ||
+            foundBook.qualification.find(searchTerm) != string::npos ||
+            foundBook.link.find(searchTerm) != string::npos)
+        {
+            found = true;
             break;
         }
     }
 
     file.close();
     return found;
+}
+
+bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
+{
+    ifstream file(inventory);
+    if (!file)
+    {
+        cerr << "Error: Unable to open file.\n";
+        return false;
+    }
+
+    vector<string> lines;
+    string line;
+    bool deleted = false;
+
+    // Leer todas las líneas en un vector
+    while (getline(file, line))
+    {
+        // Si la palabra de búsqueda no está en ninguna parte del libro, lo mantenemos
+        if (line.find(searchTerm) == string::npos)
+        {
+            lines.push_back(line); // Si no coincide con el término de búsqueda, guardar la línea
+        }
+        else
+        {
+            deleted = true; // Marcamos que se eliminó el libro
+        }
+    }
+    file.close();
+
+    // Si se eliminó, reescribir el archivo sin el libro
+    if (deleted)
+    {
+        ofstream outFile(inventory);
+        for (const string &line : lines)
+        {
+            outFile << line << endl;
+        }
+        outFile.close();
+        cout << "Book deleted successfully." << endl;
+    }
+    else
+    {
+        cout << "No book found with the search term: " << searchTerm << endl;
+    }
+
+    return deleted;
+}
+
+void showMenu(const string &inventory)
+{
+    int choice;
+    do
+    {
+        // Mostrar menú de opciones
+        cout << "\nMenu:\n";
+        cout << "1. Add a Book\n";
+        cout << "2. Find a Book\n";
+        cout << "3. Delete a Book\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore(); // Limpiar el buffer de entrada
+
+        switch (choice)
+        {
+        case 1:
+        {
+            // Agregar un libro
+            Book newBook;
+            cout << "Enter book title: ";
+            getline(cin, newBook.title);
+            cout << "Enter author: ";
+            getline(cin, newBook.author);
+            cout << "Enter genre: ";
+            getline(cin, newBook.genre);
+            cout << "Enter year: ";
+            getline(cin, newBook.year);
+            cout << "Enter ISBN: ";
+            getline(cin, newBook.ISBN);
+            cout << "Enter keywords: ";
+            getline(cin, newBook.keywords);
+            cout << "Enter qualification: ";
+            getline(cin, newBook.qualification);
+            cout << "Enter link: ";
+            getline(cin, newBook.link);
+
+            addBookToCSV(inventory, newBook);
+            break;
+        }
+        case 2:
+        {
+            // Buscar un libro
+            string searchTerm;
+            cout << "Enter search term: ";
+            getline(cin, searchTerm);
+
+            Book foundBook;
+            bool found = findBookInCSV(inventory, searchTerm, foundBook);
+
+            if (found)
+            {
+                cout << "Book found: \n";
+                cout << "Title: " << foundBook.title << "\n";
+                cout << "Author: " << foundBook.author << "\n";
+                cout << "Genre: " << foundBook.genre << "\n";
+                cout << "Year: " << foundBook.year << "\n";
+                cout << "ISBN: " << foundBook.ISBN << "\n";
+                cout << "Keywords: " << foundBook.keywords << "\n";
+                cout << "Qualification: " << foundBook.qualification << "\n";
+                cout << "Link: " << foundBook.link << "\n";
+            }
+            else
+            {
+                cout << "Book not found.\n";
+            }
+            break;
+        }
+        case 3:
+        {
+            // Eliminar un libro
+            string searchTerm;
+            cout << "Enter the search term (could be part of any field): ";
+            getline(cin, searchTerm);
+
+            deleteBookFromCSV(inventory, searchTerm);
+            break;
+        }
+        case 4:
+            cout << "Exiting the program.\n";
+            break;
+        default:
+            cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 4);
 }
