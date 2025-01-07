@@ -1,0 +1,51 @@
+﻿code,title,author,genre,publicationYear
+10001,El Sexto,José María Arguedas,Novela,1961
+10002,Conversación en La Catedral,Mario Vargas Llosa,Novela,1969
+10003,Tradiciones Peruanas,Ricardo Palma,Cuentos,1872
+10004,Los Heraldos Negros,César Vallejo,Poesía,1919
+10005,La Ciudad y los Perros,Mario Vargas Llosa,Novela,1963
+10006,Cien Años de Soledad,Gabriel García Márquez,Novela,1967
+10007,Como Agua para Chocolate,Laura Esquivel,Novela,1989
+10008,La Casa de los Espíritus,Isabel Allende,Novela,1982
+10009,El Amor en los Tiempos del Cólera,Gabriel García Márquez,Novela,1985
+10010,Don Quijote de la Mancha,Miguel de Cervantes,Novela,1605
+10011,El Alquimista,Paulo Coelho,Novela,1988
+10012,Crónica de una Muerte Anunciada,Gabriel García Márquez,Novela,1981
+10013,La Sombra del Viento,Carlos Ruiz Zafón,Novela,2001
+10014,El Principito,Antoine de Saint-Exupéry,Ficción,1943
+10015,Rayuela,Julio Cortázar,Novela,1963
+10016,La Fiesta del Chivo,Mario Vargas Llosa,Novela,2000
+10017,El Otoño del Patriarca,Gabriel García Márquez,Novela,1975
+10018,Ficciones,Jorge Luis Borges,Cuentos,1944
+10019,El Laberinto de los Espíritus,Carlos Ruiz Zafón,Novela,2016
+10020,La Chica del Tren,Paula Hawkins,Thriller,2015
+10021,El Código Da Vinci,Dan Brown,Misterio,2003
+10022,Los Juegos del Hambre,Suzanne Collins,Ciencia Ficción,2008
+10023,Harry Potter y la Piedra Filosofal,J.K. Rowling,Fantasía,1997
+10024,El Nombre del Viento,Patrick Rothfuss,Fantasía,2007
+10025,Orgullo y Prejuicio,Jane Austen,Romance,1813
+10026,Cumbres Borrascosas,Emily Brontë,Clásico,1847
+10027,El Silencio de los Corderos,Thomas Harris,Horror,1988
+10028,Veinte Mil Leguas de Viaje Submarino,Julio Verne,Aventura,1870
+10029,El Hombre en Busca de Sentido,Viktor Frankl,No Ficción,1946
+10030,Sapiens: De Animales a Dioses,Yuval Noah Harari,Historia,2011
+10031,El Arte de la Guerra,Sun Tzu,Estrategia,1772
+10032,Un Mundo Feliz,Aldous Huxley,Distopía,1932
+10033,El Hobbit,J.R.R. Tolkien,Fantasía,1937
+10034,Rebelión en la Granja,George Orwell,Satira,1945
+10035,El Gran Gatsby,F. Scott Fitzgerald,Clásico,1925
+10036,Drácula,Bram Stoker,Horror,1897
+10037,La Tía Julia y el Escribidor,Mario Vargas Llosa,Novela,1977
+10038,El Pragmatic Programmer,Andrew Hunt y Dave Thomas,Programación,1999
+10039,Código Limpio: Manual de Artesanía de Software Ágil,Robert C. Martin,Programación,2008
+10040,Código Completo,Steve McConnell,Programación,1993
+10041,La Entrevista de Trabajo de Programación,Gayle Laakmann McDowell,Programación,2008
+10042,El Arte de Programar Computadoras,Donald E. Knuth,Algoritmos,1968
+10043,Patrones de Diseño: Elementos de Software Orientado a Objetos Reutilizable,Erich Gamma,Patrones de Diseño,1994
+10044,Refactoring: Mejorando el Diseño del Código Existente,Martin Fowler,Refactoring,1999
+10045,Patrones de Diseño: Una Introducción Enfocada en C# y .NET,Eric Freeman,Patrones de Diseño,2004
+10046,Perlas de Programación,Jon Bentley,Algoritmos,1986
+10047,El Mítico Hombre-Mes,Frederick P. Brooks Jr.,Gestión de Proyectos,1975
+10048,Java Eficaz,Joshua Bloch,Java,2001
+10049,Curso Intensivo de Python,Eric Matthes,Python,2016
+10050,JavaScript: Lo Bueno, Douglas Crockford,JavaScript,2008
