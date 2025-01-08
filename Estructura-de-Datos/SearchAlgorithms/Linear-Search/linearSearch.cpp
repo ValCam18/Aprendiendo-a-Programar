@@ -4,6 +4,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <vector>
+#include <algorithm>
+#include <cctype>
 using namespace std;
 
 struct Book
@@ -25,6 +27,8 @@ bool containsSearchTerm(Book book, string searchTerm);
 bool deleteBookFromCSV(const string &inventory, const string &searchTerm);
 void showMenu(const string &inventory);
 Book mapLineToBook(string line);
+string toLowerCase(const string& input);
+
 
 int main()
 {
@@ -73,9 +77,11 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
 
     string line;
     Book book;
+    string lowerSearchTerm = toLowerCase(searchTerm);
 
     while (getline(file, line))
-    {
+    {   
+
         stringstream ss(line);
         string field;
         int column = 0;
@@ -176,12 +182,13 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
 }
 
 bool containsSearchTerm(Book book, string searchTerm)
-{
+{   
+    searchTerm = toLowerCase(searchTerm);
     // Verifica si la palabra de búsqueda aparece en cualquiera de los atributos
     vector<string> attributes = {book.title, book.author, book.genre, book.year, book.ISBN, book.keywords, book.qualification, book.link};
     for (const auto &attr : attributes)
     {
-        if (attr.find(searchTerm) != string::npos)
+        if (toLowerCase(attr).find(searchTerm) != string::npos)
             return true;
     }
     return false;
@@ -196,6 +203,7 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
         return false;
     }
 
+    string lowerSearchTerm = toLowerCase(searchTerm);
     vector<string> booksToKeep; // Libros a mantener en el csv
     vector<string> booksFound;  // Libros con coincidencia
     string line;
@@ -203,7 +211,7 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
     // Leer todas las líneas en un vector
     while (getline(file, line))
     {
-        if (line.find(searchTerm) != string::npos)
+        if (toLowerCase(line).find(lowerSearchTerm) != string::npos)
         {
             booksFound.push_back(line);
         }
@@ -456,4 +464,11 @@ Book mapLineToBook(string line)
     }
 
     return book;
+}
+
+string toLowerCase(const string& input) 
+{
+    string result = input;
+    transform(result.begin(), result.end(), result.begin(),[](unsigned char c) { return tolower(c); });
+    return result;
 }
