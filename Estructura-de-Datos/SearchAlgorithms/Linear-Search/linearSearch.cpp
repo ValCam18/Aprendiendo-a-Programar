@@ -81,10 +81,6 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
 
     while (getline(file, line))
     {   
-        //book = mapLineToBook(line);
-        if (containsSearchTerm(book, lowerSearchTerm)) {
-            searchResult.push_back(book);
-        }
 
         stringstream ss(line);
         string field;
