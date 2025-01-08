@@ -178,16 +178,11 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
 bool containsSearchTerm(Book book, string searchTerm)
 {
     // Verifica si la palabra de búsqueda aparece en cualquiera de los atributos
-    if (book.title.find(searchTerm) != string::npos ||
-        book.author.find(searchTerm) != string::npos ||
-        book.genre.find(searchTerm) != string::npos ||
-        book.year.find(searchTerm) != string::npos ||
-        book.ISBN.find(searchTerm) != string::npos ||
-        book.keywords.find(searchTerm) != string::npos ||
-        book.qualification.find(searchTerm) != string::npos ||
-        book.link.find(searchTerm) != string::npos)
+    vector<string> attributes = {book.title, book.author, book.genre, book.year, book.ISBN, book.keywords, book.qualification, book.link};
+    for (const auto &attr : attributes)
     {
-        return true;
+        if (attr.find(searchTerm) != string::npos)
+            return true;
     }
     return false;
 }
