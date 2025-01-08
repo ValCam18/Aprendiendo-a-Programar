@@ -24,6 +24,7 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
 bool containsSearchTerm(Book book, string searchTerm);
 bool deleteBookFromCSV(const string &inventory, const string &searchTerm);
 void showMenu(const string &inventory);
+Book mapLineToBook(string line);
 
 int main()
 {
@@ -72,15 +73,6 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
 
     string line;
     Book book;
-
-    /*string title = "Title: ";
-    string author = "Author: ";
-    string genre = "Genre: ";
-    string year = "Year: ";
-    string ISBN = "ISBN: ";
-    string keywords = "Keywords: ";
-    string qualification = "Qualification: ";
-    string link = "Link: ";*/
 
     while (getline(file, line))
     {
@@ -204,42 +196,116 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
         return false;
     }
 
-    vector<string> lines;
+    vector<string> booksToKeep; // Libros a mantener en el csv
+    vector<string> booksFound;  // Libros con coincidencia
     string line;
-    bool deleted = false;
 
     // Leer todas las líneas en un vector
     while (getline(file, line))
     {
-        // Si la palabra de búsqueda no está en ninguna parte del libro, lo mantenemos
-        if (line.find(searchTerm) == string::npos)
+        if (line.find(searchTerm) != string::npos)
         {
-            lines.push_back(line); // Si no coincide con el término de búsqueda, guardar la línea
+            booksFound.push_back(line);
         }
         else
         {
-            deleted = true; // Marcamos que se eliminó el libro
+            booksToKeep.push_back(line);
         }
     }
     file.close();
 
-    // Si se eliminó, reescribir el archivo sin el libro
-    if (deleted)
-    {
-        ofstream outFile(inventory);
-        for (const string &line : lines)
-        {
-            outFile << line << endl;
-        }
-        outFile.close();
-        cout << "Book deleted successfully." << endl;
-    }
-    else
+    // Si no se encontraron libros con el término de búsqueda
+    if (booksFound.empty())
     {
         cout << "No book found with the search term: " << searchTerm << endl;
+        return false;
     }
 
-    return deleted;
+    // Mostrar todos los libros que coinciden con el término de búsqueda
+    cout << "Found " << booksFound.size() << " book(s) with the search term: " << searchTerm << endl;
+    for (size_t i = 0; i < booksFound.size(); ++i)
+    {
+        Book book = mapLineToBook(booksFound[i]);
+        cout << i + 1 << ". ISBN: " << book.ISBN << " | Title: " << book.title << endl; // Mostrar los libros encontrados
+    }
+
+    // Preguntar al usuario cual libro desea eliminar
+    vector<int> booksToRemove; // Para almacenar las opciones de libros a eliminar
+    cout << "\nEnter the number(s) of the book(s) you want to delete: ";
+    string userInput;
+    getline(cin, userInput);
+
+    // Recorrer el string userInput, separarlos y convertirlos a int
+    string selection = "";
+    for (char c : userInput)
+    {
+        if (c == ' ')
+        {
+            booksToRemove.push_back(stoi(selection) - 1);
+            selection = "";
+        }
+        else
+        {
+            selection += c;
+        }
+    }
+    if (!selection.empty())
+    {
+        booksToRemove.push_back(stoi(selection) - 1);
+    }
+
+    // Validación para confirmar si el usuario quiere eliminar el libro seleccionado
+    cout << "\nAre you sure you want to delete: \n";
+    for (int index : booksToRemove)
+    {
+        if (index >= 0 && index < booksFound.size())
+        {
+            Book book = mapLineToBook(booksFound[index]);
+            cout << index + 1 << ". ISBN: " << book.ISBN << " | Title: " << book.title << endl;
+        }
+    }
+    cout << " (y/n)?: ";
+    char confirmation;
+    cin >> confirmation;
+    cin.ignore(); // Para limpiar el buffer de entrada
+
+    // Si el usuario confirma, eliminar el libro
+    if (!(confirmation == 'y' || confirmation == 'Y'))
+    {
+        cout << "Book(s) not deleted." << endl;
+        return false;
+    }
+    cout << "Deleting book(s)." << endl;
+
+    // Reescribir el archivo sin los libros eliminados
+    ofstream outFile(inventory);
+    for (const string &line : booksToKeep)
+    {
+        outFile << line << endl;
+    }
+
+    // Agregar las lineas de los libros no eliminados (que coincidian con la búsqueda) al archivo
+    for (int i = 0; i < booksFound.size(); i++)
+    {
+        bool isBookToKeep = true;
+        for (int j = 0; j < booksToRemove.size(); j++)
+        {
+            if (i == booksToRemove[j])
+            {
+                isBookToKeep = false;
+                break;
+            }
+        }
+        if (isBookToKeep)
+        { // Si el libro no fue marcado para ser eliminado, lo guardamos en el archivo
+            outFile << booksFound[i] << endl;
+        }
+    }
+    outFile.close();
+
+    cout << "Book(s) deleted successfully." << endl;
+
+    return true;
 }
 
 void showMenu(const string &inventory)
@@ -315,7 +381,7 @@ void showMenu(const string &inventory)
         {
             // Eliminar un libro
             string searchTerm;
-            cout << "Enter the search term (could be part of any field): ";
+            cout << "Enter the search term: ";
             getline(cin, searchTerm);
 
             deleteBookFromCSV(inventory, searchTerm);
@@ -328,4 +394,66 @@ void showMenu(const string &inventory)
             cout << "Invalid choice. Please try again.\n";
         }
     } while (choice != 4);
+}
+
+Book mapLineToBook(string line)
+{
+    Book book;
+    string field;
+    int column = 0;
+
+    // Manejo de comillas
+    bool inQuotes = false;
+    string currentField = "";
+
+    for (char c : line)
+    {
+        if (c == '"')
+        {
+            inQuotes = !inQuotes; // Toggle quotes
+        }
+        else if (c == ',' && !inQuotes)
+        {
+            // Si no estamos dentro de comillas, separamos por coma
+            field = currentField;
+            currentField.clear();
+
+            // Asigna el campo correspondiente
+            switch (column)
+            {
+            case 0:
+                book.title = field;
+                break;
+            case 1:
+                book.author = field;
+                break;
+            case 2:
+                book.genre = field;
+                break;
+            case 3:
+                book.year = field;
+                break;
+            case 4:
+                book.ISBN = field;
+                break;
+            case 5:
+                book.keywords = field;
+                break;
+            case 6:
+                book.qualification = field;
+                break;
+            case 7:
+                book.link = field;
+                break;
+            }
+
+            column++;
+        }
+        else
+        {
+            currentField += c; // Acumula el carácter en el campo actual
+        }
+    }
+
+    return book;
 }
