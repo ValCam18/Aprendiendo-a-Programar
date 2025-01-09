@@ -5,7 +5,6 @@
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
-#include <cctype>
 using namespace std;
 
 struct Book
@@ -26,9 +25,10 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
 bool containsSearchTerm(Book book, string searchTerm);
 bool deleteBookFromCSV(const string &inventory, const string &searchTerm);
 void showMenu(const string &inventory);
-Book mapLineToBook(string line);
-string toLowerCase(const string& input);
-
+string toLowerCase(const string &input);
+Book mapLineToBook(const string &line);
+vector<string> parseCSVline(const string &line);
+bool confirmAction(const string &message);
 
 int main()
 {
@@ -41,24 +41,33 @@ void addBookToCSV(const string &inventory, const Book &book)
 {
     try
     {
-        ofstream file(inventory, ios::app); // Abre el archivo en modo append
-        if (file.is_open())
-        {
-            file << "\"" << book.title << "\","
-                 << "\"" << book.author << "\","
-                 << "\"" << book.genre << "\","
-                 << "\"" << book.year << "\","
-                 << "\"" << book.ISBN << "\","
-                 << "\"" << book.keywords << "\","
-                 << "\"" << book.qualification << "\","
-                 << "\"" << book.link << "\"\n"; // Agrega la nueva línea para el libro
-            file.close();
-            cout << "Book added successfully." << endl;
-        }
-        else
+        ofstream file(inventory, ios::app); // Abre el archivo en modo 'append'
+        if (!file.is_open())
         {
             throw runtime_error("Error: Unable to open file.");
         }
+
+        // Construcción del libro como una línea CSV
+        string bookLine = "\"" + book.title + "\",\n"
+                                              "\"" +
+                          book.author + "\",\n"
+                                        "\"" +
+                          book.genre + "\",\n"
+                                       "\"" +
+                          book.year + "\",\n"
+                                      "\"" +
+                          book.ISBN + "\",\n"
+                                      "\"" +
+                          book.keywords + "\",\n"
+                                          "\"" +
+                          book.qualification + "\",\n"
+                                               "\"" +
+                          book.link + "\"\n";
+
+        file << bookLine; // Agrega la nueva línea al archivo
+        cout << "Book added successfully." << endl;
+
+        file.close();
     }
     catch (const exception &e)
     {
@@ -80,101 +89,27 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
     string lowerSearchTerm = toLowerCase(searchTerm);
 
     while (getline(file, line))
-    {   
+    {
+        vector<string> fields = parseCSVline(line); // Usamos parseCSVLine aquí también
 
-        stringstream ss(line);
-        string field;
-        int column = 0;
-
-        // Manejo de comillas
-        bool inQuotes = false;
-        string currentField = "";
-
-        for (char c : line)
+        // Asignamos los campos del CSV a un libro
+        if (fields.size() != 8)
         {
-            if (c == '"')
-            {
-                inQuotes = !inQuotes; // Toggle quotes
-            }
-            else if (c == ',' && !inQuotes)
-            {
-                // Si no estamos dentro de comillas, separamos por coma
-                field = currentField;
-                currentField.clear();
-
-                // Asigna el campo correspondiente
-                switch (column)
-                {
-                case 0:
-                    book.title = field;
-                    break;
-                case 1:
-                    book.author = field;
-                    break;
-                case 2:
-                    book.genre = field;
-                    break;
-                case 3:
-                    book.year = field;
-                    break;
-                case 4:
-                    book.ISBN = field;
-                    break;
-                case 5:
-                    book.keywords = field;
-                    break;
-                case 6:
-                    book.qualification = field;
-                    break;
-                case 7:
-                    book.link = field;
-                    break;
-                }
-
-                column++;
-            }
-            else
-            {
-                currentField += c; // Acumula el carácter en el campo actual
-            }
+            continue; // Si la línea no tiene los campos correctos, la ignoramos
         }
 
-        // Para el último campo
-        if (!currentField.empty())
-        {
-            switch (column)
-            {
-            case 0:
-                book.title = currentField;
-                break;
-            case 1:
-                book.author = currentField;
-                break;
-            case 2:
-                book.genre = currentField;
-                break;
-            case 3:
-                book.year = currentField;
-                break;
-            case 4:
-                book.ISBN = currentField;
-                break;
-            case 5:
-                book.keywords = currentField;
-                break;
-            case 6:
-                book.qualification = currentField;
-                break;
-            case 7:
-                book.link = currentField;
-                break;
-            }
+        book.title = fields[0];
+        book.author = fields[1];
+        book.genre = fields[2];
+        book.year = fields[3];
+        book.ISBN = fields[4];
+        book.keywords = fields[5];
+        book.qualification = fields[6];
+        book.link = fields[7];
 
-            column++;
-        }
         if (containsSearchTerm(book, searchTerm))
         {
-            searchResult.push_back(book);
+            searchResult.push_back(book); // Si coincide con el término de búsqueda, lo agregamos a los resultados
         }
     }
 
@@ -182,8 +117,7 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
 }
 
 bool containsSearchTerm(Book book, string searchTerm)
-{   
-    searchTerm = toLowerCase(searchTerm);
+{
     // Verifica si la palabra de búsqueda aparece en cualquiera de los atributos
     vector<string> attributes = {book.title, book.author, book.genre, book.year, book.ISBN, book.keywords, book.qualification, book.link};
     for (const auto &attr : attributes)
@@ -204,7 +138,7 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
     }
 
     string lowerSearchTerm = toLowerCase(searchTerm);
-    vector<string> booksToKeep; // Libros a mantener en el csv
+    vector<string> booksToKeep; // Libros a mantener
     vector<string> booksFound;  // Libros con coincidencia
     string line;
 
@@ -222,103 +156,116 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
     }
     file.close();
 
-    // Si no se encontraron libros con el término de búsqueda
     if (booksFound.empty())
     {
         cout << "No book found with the search term: " << searchTerm << endl;
         return false;
     }
 
-    // Mostrar todos los libros que coinciden con el término de búsqueda
-    cout << "Found " << booksFound.size() << " book(s) with the search term: " << searchTerm << endl;
+    // Mostrar los libros encontrados
+    cout << "Found " << booksFound.size() << " book(s):\n";
     for (size_t i = 0; i < booksFound.size(); ++i)
     {
         Book book = mapLineToBook(booksFound[i]);
-        cout << i + 1 << ". ISBN: " << book.ISBN << " | Title: " << book.title << endl; // Mostrar los libros encontrados
+        cout << i + 1 << ". ISBN: " << book.ISBN << " | Title: " << book.title << endl;
     }
 
-    // Preguntar al usuario cual libro desea eliminar
-    vector<int> booksToRemove; // Para almacenar las opciones de libros a eliminar
-    cout << "\nEnter the number(s) of the book(s) you want to delete: ";
+    // Leer selección del usuario
+    cout << "\nEnter the number(s) of the book(s) you want to delete (separated by spaces): ";
     string userInput;
     getline(cin, userInput);
 
-    // Recorrer el string userInput, separarlos y convertirlos a int
-    string selection = "";
-    for (char c : userInput)
+    vector<int> booksToRemove;
+    stringstream ss(userInput);
+    string selection;
+
+    while (ss >> selection)
     {
-        if (c == ' ')
+        try
         {
-            booksToRemove.push_back(stoi(selection) - 1);
-            selection = "";
+            int index = stoi(selection) - 1;
+            if (index >= 0 && index < booksFound.size())
+            {
+                booksToRemove.push_back(index);
+            }
+            else
+            {
+                cerr << "Invalid selection: " << selection << endl;
+            }
         }
-        else
+        catch (const exception &)
         {
-            selection += c;
+            cerr << "Invalid input: " << selection << endl;
         }
-    }
-    if (!selection.empty())
-    {
-        booksToRemove.push_back(stoi(selection) - 1);
     }
 
-    // Validación para confirmar si el usuario quiere eliminar el libro seleccionado
-    cout << "\nAre you sure you want to delete: \n";
-    for (int index : booksToRemove)
+    if (booksToRemove.empty())
     {
-        if (index >= 0 && index < booksFound.size())
-        {
-            Book book = mapLineToBook(booksFound[index]);
-            cout << index + 1 << ". ISBN: " << book.ISBN << " | Title: " << book.title << endl;
-        }
-    }
-    cout << " (y/n)?: ";
-    char confirmation;
-    cin >> confirmation;
-    cin.ignore(); // Para limpiar el buffer de entrada
-
-    // Si el usuario confirma, eliminar el libro
-    if (!(confirmation == 'y' || confirmation == 'Y'))
-    {
-        cout << "Book(s) not deleted." << endl;
+        cout << "No valid books selected for deletion.\n";
         return false;
     }
-    cout << "Deleting book(s)." << endl;
 
-    // Reescribir el archivo sin los libros eliminados
-    ofstream outFile(inventory);
+    if (!confirmAction("Are you sure you want to delete the selected book(s)?"))
+    {
+        cout << "Book(s) not deleted.\n";
+        return false;
+    }
+
+    // Reescribir el archivo
+    ofstream outFile(inventory, ios::trunc);
+    if (!outFile)
+    {
+        cerr << "Error: Unable to open file for writing.\n";
+        return false;
+    }
+
     for (const string &line : booksToKeep)
     {
         outFile << line << endl;
     }
 
-    // Agregar las lineas de los libros no eliminados (que coincidian con la búsqueda) al archivo
-    for (int i = 0; i < booksFound.size(); i++)
+    // Escribir todos los libros a mantener
+    for (size_t i = 0; i < booksFound.size(); ++i)
     {
-        bool isBookToKeep = true;
-        for (int j = 0; j < booksToRemove.size(); j++)
+        if (find(booksToRemove.begin(), booksToRemove.end(), i) == booksToRemove.end())
         {
-            if (i == booksToRemove[j])
-            {
-                isBookToKeep = false;
-                break;
-            }
-        }
-        if (isBookToKeep)
-        { // Si el libro no fue marcado para ser eliminado, lo guardamos en el archivo
             outFile << booksFound[i] << endl;
         }
     }
+
     outFile.close();
-
     cout << "Book(s) deleted successfully." << endl;
+    return true; // Aseguramos que se retorna 'true' cuando los libros han sido eliminados con éxito.
+}
 
-    return true;
+Book mapLineToBook(const string &line)
+{
+    Book book;
+    vector<string> fields = parseCSVline(line); // parseCSVLine debe dividir la línea en campos correctamente.
+
+    if (fields.size() >= 8) // Asegúrate de que haya al menos 8 campos
+    {
+        book.title = fields[0];
+        book.author = fields[1];
+        book.genre = fields[2];
+        book.year = fields[3];
+        book.ISBN = fields[4];
+        book.keywords = fields[5];
+        book.qualification = fields[6];
+        book.link = fields[7];
+    }
+    else
+    {
+        cerr << "Error: Line does not have enough fields to map to Book structure.\n";
+    }
+
+    return book;
 }
 
 void showMenu(const string &inventory)
 {
     int choice;
+    string input;
     do
     {
         // Mostrar menú de opciones
@@ -328,8 +275,17 @@ void showMenu(const string &inventory)
         cout << "3. Delete a Book\n";
         cout << "4. Exit\n";
         cout << "Enter your choice: ";
-        cin >> choice;
-        cin.ignore(); // Limpiar el buffer de entrada
+        getline(cin, input);
+
+        try
+        {
+            choice = stoi(input);
+        }
+        catch (const exception &)
+        {
+            cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
 
         switch (choice)
         {
@@ -389,7 +345,7 @@ void showMenu(const string &inventory)
         {
             // Eliminar un libro
             string searchTerm;
-            cout << "Enter the search term: ";
+            cout << "Enter the search term (could be part of any field): ";
             getline(cin, searchTerm);
 
             deleteBookFromCSV(inventory, searchTerm);
@@ -404,71 +360,45 @@ void showMenu(const string &inventory)
     } while (choice != 4);
 }
 
-Book mapLineToBook(string line)
+vector<string> parseCSVline(const string &line)
 {
-    Book book;
+    vector<string> fields;
     string field;
-    int column = 0;
-
-    // Manejo de comillas
-    bool inQuotes = false;
-    string currentField = "";
+    bool insideQuotes = false;
 
     for (char c : line)
     {
-        if (c == '"')
+        if (c == '\"')
         {
-            inQuotes = !inQuotes; // Toggle quotes
+            insideQuotes = !insideQuotes;
         }
-        else if (c == ',' && !inQuotes)
+        else if (c == ',' && !insideQuotes)
         {
-            // Si no estamos dentro de comillas, separamos por coma
-            field = currentField;
-            currentField.clear();
-
-            // Asigna el campo correspondiente
-            switch (column)
-            {
-            case 0:
-                book.title = field;
-                break;
-            case 1:
-                book.author = field;
-                break;
-            case 2:
-                book.genre = field;
-                break;
-            case 3:
-                book.year = field;
-                break;
-            case 4:
-                book.ISBN = field;
-                break;
-            case 5:
-                book.keywords = field;
-                break;
-            case 6:
-                book.qualification = field;
-                break;
-            case 7:
-                book.link = field;
-                break;
-            }
-
-            column++;
+            fields.push_back(field);
+            field.clear();
         }
         else
         {
-            currentField += c; // Acumula el carácter en el campo actual
+            field += c;
         }
     }
-
-    return book;
+    fields.push_back(field); // Agrega el último campo
+    return fields;
 }
 
-string toLowerCase(const string& input) 
+bool confirmAction(const string &message)
+{
+    char confirmation;
+    cout << message << " (y/n): ";
+    cin >> confirmation;
+    cin.ignore(); // Limpiar buffer
+    return confirmation == 'y' || confirmation == 'Y';
+}
+
+string toLowerCase(const string &input)
 {
     string result = input;
-    transform(result.begin(), result.end(), result.begin(),[](unsigned char c) { return tolower(c); });
+    transform(result.begin(), result.end(), result.begin(), [](unsigned char c)
+              { return tolower(c); });
     return result;
 }
