@@ -26,6 +26,8 @@ void showTopRatedBooks(const string &inventory);
 void addWishList(const string &wishList);
 void addBookToCSV(const string &inventory, const Book &book);
 bool deleteBookFromCSV(const string &inventory, const string &searchTerm);
+void showWishlist(const string &wishList);
+void removeWishList(const string &wishList, const string &keyword);
 // Auxiliary functions
 bool containsSearchTerm(Book book, string searchTerm);
 bool confirmAction(const string &message);
@@ -36,7 +38,6 @@ vector<string> parseCSVline(const string &line);
 int main()
 {
     string inventory = "inventory.csv"; // Ruta al archivo CSV
-    string wishList = "wishlist.csv";
     showMenu(inventory);
     return 0;
 }
@@ -44,6 +45,8 @@ int main()
 // Main functions
 void showMenu(const string &inventory)
 {
+    string wishlist = "wishlist.csv";
+
     int choice, adminChoice;
     string input, adminPassword;
     do
@@ -102,7 +105,7 @@ void showMenu(const string &inventory)
             showTopRatedBooks(inventory);
             break;
         case 3:
-            addWishList("wishlist.csv");
+            addWishList(wishlist);
             break;
         case 4:
             cout << "Exiting the program.\n";
@@ -164,23 +167,34 @@ void showMenu(const string &inventory)
                         break;
                     }
                     case 3:
-                       //Show Wishlist
+                        // Show Wishlist
+                        showWishlist(wishlist);
+
                         break;
                     case 4:
-                        //Remove a book from Wishlist
+                    {
+                        // Remove a book from Wishlist
+                        string searchTerm;
+                        cout << "Enter the search term (could be part of any field): ";
+                        getline(cin, searchTerm);
+
+                        removeWishList(wishlist, searchTerm);
                         break;
+                    }
                     case 5:
                         cout << "-----------------------------------" << endl;
                         break;
                     default:
-                         cout << "Invalid choice. Please try again.\n";   
+                        cout << "Invalid choice. Please try again.\n";
                         break;
                     }
                 } while (adminChoice != 5);
-            } else {
+            }
+            else
+            {
                 cout << "Invalid password. Try again." << endl;
             }
-            break; 
+            break;
         default:
             cout << "Invalid choice. Please try again.\n";
             break;
@@ -273,7 +287,8 @@ void showTopRatedBooks(const string &inventory)
     if (topRatedBooks.empty())
     {
         cout << "No books found with a qualification higher than 4.5.\n";
-    } else 
+    }
+    else
     {
         cout << "\n-----Top Rated Books-----\n";
         for (const auto &book : topRatedBooks)
@@ -320,7 +335,9 @@ void addWishList(const string &wishList)
         cout << "Book added to your wish list successfully.\n";
 
         file.close();
-    } catch (const exception &e) {
+    }
+    catch (const exception &e)
+    {
         cerr << "Error: " << e.what() << endl;
     }
 }
@@ -402,7 +419,12 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
     for (size_t i = 0; i < booksFound.size(); ++i)
     {
         Book book = mapLineToBook(booksFound[i]);
-        cout << i + 1 << ". ISBN: " << book.ISBN << " | Title: " << book.title << endl;
+        cout << i + 1 << ". ";
+        if (book.ISBN != "")
+        {
+            cout << "ISBN: " << book.ISBN << " | ";
+        }
+        cout << "Title: " << book.title << " | Author: " << book.author << endl;
     }
 
     // Leer selección del usuario
@@ -473,6 +495,52 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
     return true; // Aseguramos que se retorna 'true' cuando los libros han sido eliminados con éxito.
 }
 
+void showWishlist(const string &wishList)
+{
+    cout << "The following wishlists have been registered:";
+
+    ifstream file(wishList);
+    if (!file.is_open())
+    {
+        cerr << "Error: Unable to open wish list file.\n";
+        return;
+    }
+
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string title, author, genre;
+
+        // Leer los campos separados por coma en el archivo CSV
+        getline(ss, title, ',');
+        getline(ss, author, ',');
+        getline(ss, genre, ',');
+
+        // Mostrar los valores
+        cout << "Title: " << title << "\n";
+        cout << "Author: " << author << "\n";
+        cout << "Genre: " << genre << "\n\n";
+    }
+
+    file.close();
+}
+
+void removeWishList(const string &wishList, const string &keyword)
+{
+    // Llamamos a la función deleteBookFromCSV para manejar la eliminación
+    bool result = deleteBookFromCSV(wishList, keyword);
+
+    if (!result)
+    {
+        cout << "No books were deleted.\n";
+    }
+    else
+    {
+        cout << "Books matching the keyword '" << keyword << "' have been deleted from your wish list.\n";
+    }
+}
+
 // Auxiliary functions
 bool containsSearchTerm(Book book, string searchTerm)
 {
@@ -500,22 +568,26 @@ Book mapLineToBook(const string &line)
     Book book;
     vector<string> fields = parseCSVline(line); // parseCSVLine debe dividir la línea en campos correctamente.
 
-    if (fields.size() >= 8) // Asegúrate de que haya al menos 8 campos
+    for (int i = 0; i < fields.size(); i++)
     {
-        book.title = fields[0];
-        book.author = fields[1];
-        book.genre = fields[2];
-        book.year = fields[3];
-        book.ISBN = fields[4];
-        book.keywords = fields[5];
-        book.qualification = fields[6];
-        book.link = fields[7];
+        string field = fields[i];
+        if (i == 0)
+            book.title = field;
+        else if (i == 1)
+            book.author = field;
+        else if (i == 2)
+            book.genre = field;
+        else if (i == 3)
+            book.year = field;
+        else if (i == 4)
+            book.ISBN = field;
+        else if (i == 5)
+            book.keywords = field;
+        else if (i == 6)
+            book.qualification = field;
+        else if (i == 7)
+            book.link = field;
     }
-    else
-    {
-        cerr << "Error: Line does not have enough fields to map to Book structure.\n";
-    }
-
     return book;
 }
 
@@ -552,4 +624,3 @@ vector<string> parseCSVline(const string &line)
     fields.push_back(field); // Agrega el último campo
     return fields;
 }
-
