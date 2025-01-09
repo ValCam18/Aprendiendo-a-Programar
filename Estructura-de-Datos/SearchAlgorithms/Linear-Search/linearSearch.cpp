@@ -19,60 +19,173 @@ struct Book
     string link;
 };
 
-// Declaración de las funciones
-void addBookToCSV(const string &inventory, const Book &book);
-void findBookInCSV(const string &inventory, const string &searchTerm, vector<Book> &searchResult);
-bool containsSearchTerm(Book book, string searchTerm);
-bool deleteBookFromCSV(const string &inventory, const string &searchTerm);
+// Main functions
 void showMenu(const string &inventory);
-string toLowerCase(const string &input);
-Book mapLineToBook(const string &line);
-vector<string> parseCSVline(const string &line);
+void findBookInCSV(const string &inventory, const string &searchTerm, vector<Book> &searchResult);
+void showTopRatedBooks(const string &inventory);
+void addWishList(const string &wishList);
+void addBookToCSV(const string &inventory, const Book &book);
+bool deleteBookFromCSV(const string &inventory, const string &searchTerm);
+// Auxiliary functions
+bool containsSearchTerm(Book book, string searchTerm);
 bool confirmAction(const string &message);
+Book mapLineToBook(const string &line);
+string toLowerCase(const string &input);
+vector<string> parseCSVline(const string &line);
 
 int main()
 {
     string inventory = "inventory.csv"; // Ruta al archivo CSV
+    string wishList = "wishlist.csv";
     showMenu(inventory);
     return 0;
 }
 
-void addBookToCSV(const string &inventory, const Book &book)
+// Main functions
+void showMenu(const string &inventory)
 {
-    try
+    int choice, adminChoice;
+    string input, adminPassword;
+    do
     {
-        ofstream file(inventory, ios::app); // Abre el archivo en modo 'append'
-        if (!file.is_open())
+        // Mostrar menú de opciones
+        cout << "\nMenu:\n";
+        cout << "1. Find a book\n";
+        cout << "2. Top rated books\n";
+        cout << "3. Wishlist\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        getline(cin, input);
+
+        try
         {
-            throw runtime_error("Error: Unable to open file.");
+            choice = stoi(input);
+            adminChoice = stoi(input);
+        }
+        catch (const exception &)
+        {
+            cout << "Invalid input. Please enter a number.\n";
+            continue;
         }
 
-        // Construcción del libro como una línea CSV
-        string bookLine = "\"" + book.title + "\",\n"
-                                              "\"" +
-                          book.author + "\",\n"
-                                        "\"" +
-                          book.genre + "\",\n"
-                                       "\"" +
-                          book.year + "\",\n"
-                                      "\"" +
-                          book.ISBN + "\",\n"
-                                      "\"" +
-                          book.keywords + "\",\n"
-                                          "\"" +
-                          book.qualification + "\",\n"
-                                               "\"" +
-                          book.link + "\"\n";
+        switch (choice)
+        {
+        case 1:
+        {
+            // Buscar un libro
+            string searchTerm;
+            cout << "Enter search term: ";
+            getline(cin, searchTerm);
+            vector<Book> searchResult;
 
-        file << bookLine; // Agrega la nueva línea al archivo
-        cout << "Book added successfully." << endl;
+            findBookInCSV(inventory, searchTerm, searchResult);
+            if (searchResult.size() > 0)
+            {
+                for (Book book : searchResult)
+                {
+                    cout << "Title: " << book.title << endl;
+                    cout << "Author: " << book.author << endl;
+                    cout << "Genre: " << book.genre << endl;
+                    cout << "Year: " << book.year << endl;
+                    cout << "ISBN: " << book.ISBN << endl;
+                    cout << "Keywords: " << book.keywords << endl;
+                    cout << "Qualification: " << book.qualification << endl;
+                    cout << "Link: " << book.link << endl;
+                    cout << "-----------------------------------" << endl;
+                }
+            }
+            cout << "Books found: " << searchResult.size() << endl;
+            cout << "-----------------------------------" << endl;
+            break;
+        }
+        case 2:
+            showTopRatedBooks(inventory);
+            break;
+        case 3:
+            addWishList("wishlist.csv");
+            break;
+        case 4:
+            cout << "Exiting the program.\n";
+            break;
+        case 88:
+            cout << "-----------------------------------" << endl;
+            cout << "Admin's Menu" << endl;
+            cout << "Enter admin's password: " << endl;
+            getline(cin, adminPassword);
 
-        file.close();
-    }
-    catch (const exception &e)
-    {
-        cerr << "Error: " << e.what() << endl;
-    }
+            if (adminPassword == "adminpass")
+            {
+                do
+                {
+                    cout << "-----------------------------------" << endl;
+                    cout << "1. Add a book to inventory" << endl;
+                    cout << "2. Remove a book from inventory" << endl;
+                    cout << "3. Show Wishlist" << endl;
+                    cout << "4. Remove a book from Wishlist" << endl;
+                    cout << "5. Back to the main menu." << endl;
+                    cout << "Enter your choice: ";
+                    cin >> adminChoice;
+                    cin.ignore();
+
+                    switch (adminChoice)
+                    {
+                    case 1:
+                    {
+                        // Agregar un libro
+                        Book newBook;
+                        cout << "Enter book title: ";
+                        getline(cin, newBook.title);
+                        cout << "Enter author: ";
+                        getline(cin, newBook.author);
+                        cout << "Enter genre: ";
+                        getline(cin, newBook.genre);
+                        cout << "Enter year: ";
+                        getline(cin, newBook.year);
+                        cout << "Enter ISBN: ";
+                        getline(cin, newBook.ISBN);
+                        cout << "Enter keywords: ";
+                        getline(cin, newBook.keywords);
+                        cout << "Enter qualification: ";
+                        getline(cin, newBook.qualification);
+                        cout << "Enter link: ";
+                        getline(cin, newBook.link);
+
+                        addBookToCSV(inventory, newBook);
+                        break;
+                    }
+                    case 2:
+                    {
+                        // Eliminar un libro
+                        string searchTerm;
+                        cout << "Enter the search term (could be part of any field): ";
+                        getline(cin, searchTerm);
+
+                        deleteBookFromCSV(inventory, searchTerm);
+                        break;
+                    }
+                    case 3:
+                       //Show Wishlist
+                        break;
+                    case 4:
+                        //Remove a book from Wishlist
+                        break;
+                    case 5:
+                        cout << "-----------------------------------" << endl;
+                        break;
+                    default:
+                         cout << "Invalid choice. Please try again.\n";   
+                        break;
+                    }
+                } while (adminChoice != 5);
+            } else {
+                cout << "Invalid password. Try again." << endl;
+            }
+            break; 
+        default:
+            cout << "Invalid choice. Please try again.\n";
+            break;
+        }
+    } while (choice != 4);
 }
 
 void findBookInCSV(const string &inventory, const string &searchTerm, vector<Book> &searchResult)
@@ -116,16 +229,138 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
     file.close();
 }
 
-bool containsSearchTerm(Book book, string searchTerm)
+void showTopRatedBooks(const string &inventory)
 {
-    // Verifica si la palabra de búsqueda aparece en cualquiera de los atributos
-    vector<string> attributes = {book.title, book.author, book.genre, book.year, book.ISBN, book.keywords, book.qualification, book.link};
-    for (const auto &attr : attributes)
+    ifstream file(inventory);
+    if (!file)
     {
-        if (toLowerCase(attr).find(searchTerm) != string::npos)
-            return true;
+        cerr << "Error: Unable to open file.\n";
+        return;
     }
-    return false;
+
+    string line;
+    Book book;
+    vector<string> validQualifications = {"4.6", "4.7", "4.8", "4.9", "5"};
+    vector<Book> topRatedBooks;
+
+    while (getline(file, line))
+    {
+        vector<string> fields = parseCSVline(line);
+
+        if (fields.size() != 8)
+        {
+            continue;
+        }
+
+        book.title = fields[0];
+        book.author = fields[1];
+        book.genre = fields[2];
+        book.year = fields[3];
+        book.ISBN = fields[4];
+        book.keywords = fields[5];
+        book.qualification = fields[6];
+        book.link = fields[7];
+
+        if (find(validQualifications.begin(), validQualifications.end(), book.qualification) != validQualifications.end())
+        {
+            topRatedBooks.push_back(book);
+        }
+    }
+
+    file.close();
+
+    // Mostrar los libros encontrados
+    if (topRatedBooks.empty())
+    {
+        cout << "No books found with a qualification higher than 4.5.\n";
+    } else 
+    {
+        cout << "\n-----Top Rated Books-----\n";
+        for (const auto &book : topRatedBooks)
+        {
+            cout << "Title: " << book.title << endl;
+            cout << "Author: " << book.author << endl;
+            cout << "Genre: " << book.genre << endl;
+            cout << "Year: " << book.year << endl;
+            cout << "ISBN: " << book.ISBN << endl;
+            cout << "Keywords: " << book.keywords << endl;
+            cout << "Qualification: " << book.qualification << endl;
+            cout << "Link: " << book.link << endl;
+            cout << "-----------------------------------" << endl;
+        }
+        cout << "Total books found: " << topRatedBooks.size() << endl;
+    }
+}
+
+void addWishList(const string &wishList)
+{
+    cout << "You can add a book to your wish list.\n";
+
+    Book desiredBook;
+    cout << "Enter book title: ";
+    getline(cin, desiredBook.title);
+    cout << "Enter author: ";
+    getline(cin, desiredBook.author);
+    cout << "Enter genre: ";
+    getline(cin, desiredBook.genre);
+
+    try
+    {
+        ofstream file(wishList, ios::app);
+        if (!file.is_open())
+        {
+            throw runtime_error("Error: Unable to open wish list file.");
+        }
+
+        string bookLine = "\"" + desiredBook.title + "\",\"" +
+                          desiredBook.author + "\",\"" +
+                          desiredBook.genre + "\"\n";
+
+        file << bookLine;
+        cout << "Book added to your wish list successfully.\n";
+
+        file.close();
+    } catch (const exception &e) {
+        cerr << "Error: " << e.what() << endl;
+    }
+}
+
+void addBookToCSV(const string &inventory, const Book &book)
+{
+    try
+    {
+        ofstream file(inventory, ios::app); // Abre el archivo en modo 'append'
+        if (!file.is_open())
+        {
+            throw runtime_error("Error: Unable to open file.");
+        }
+
+        // Construcción del libro como una línea CSV
+        string bookLine = "\"" + book.title + "\","
+                                              "\"" +
+                          book.author + "\","
+                                        "\"" +
+                          book.genre + "\","
+                                       "\"" +
+                          book.year + "\","
+                                      "\"" +
+                          book.ISBN + "\","
+                                      "\"" +
+                          book.keywords + "\","
+                                          "\"" +
+                          book.qualification + "\","
+                                               "\"" +
+                          book.link + "\"\n";
+
+        file << bookLine; // Agrega la nueva línea al archivo
+        cout << "Book added successfully." << endl;
+
+        file.close();
+    }
+    catch (const exception &e)
+    {
+        cerr << "Error: " << e.what() << endl;
+    }
 }
 
 bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
@@ -238,6 +473,28 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
     return true; // Aseguramos que se retorna 'true' cuando los libros han sido eliminados con éxito.
 }
 
+// Auxiliary functions
+bool containsSearchTerm(Book book, string searchTerm)
+{
+    // Verifica si la palabra de búsqueda aparece en cualquiera de los atributos
+    vector<string> attributes = {book.title, book.author, book.genre, book.year, book.ISBN, book.keywords, book.qualification, book.link};
+    for (const auto &attr : attributes)
+    {
+        if (toLowerCase(attr).find(searchTerm) != string::npos)
+            return true;
+    }
+    return false;
+}
+
+bool confirmAction(const string &message)
+{
+    char confirmation;
+    cout << message << " (y/n): ";
+    cin >> confirmation;
+    cin.ignore(); // Limpiar buffer
+    return confirmation == 'y' || confirmation == 'Y';
+}
+
 Book mapLineToBook(const string &line)
 {
     Book book;
@@ -262,102 +519,12 @@ Book mapLineToBook(const string &line)
     return book;
 }
 
-void showMenu(const string &inventory)
+string toLowerCase(const string &input)
 {
-    int choice;
-    string input;
-    do
-    {
-        // Mostrar menú de opciones
-        cout << "\nMenu:\n";
-        cout << "1. Add a Book\n";
-        cout << "2. Find a Book\n";
-        cout << "3. Delete a Book\n";
-        cout << "4. Exit\n";
-        cout << "Enter your choice: ";
-        getline(cin, input);
-
-        try
-        {
-            choice = stoi(input);
-        }
-        catch (const exception &)
-        {
-            cout << "Invalid input. Please enter a number.\n";
-            continue;
-        }
-
-        switch (choice)
-        {
-        case 1:
-        {
-            // Agregar un libro
-            Book newBook;
-            cout << "Enter book title: ";
-            getline(cin, newBook.title);
-            cout << "Enter author: ";
-            getline(cin, newBook.author);
-            cout << "Enter genre: ";
-            getline(cin, newBook.genre);
-            cout << "Enter year: ";
-            getline(cin, newBook.year);
-            cout << "Enter ISBN: ";
-            getline(cin, newBook.ISBN);
-            cout << "Enter keywords: ";
-            getline(cin, newBook.keywords);
-            cout << "Enter qualification: ";
-            getline(cin, newBook.qualification);
-            cout << "Enter link: ";
-            getline(cin, newBook.link);
-
-            addBookToCSV(inventory, newBook);
-            break;
-        }
-        case 2:
-        {
-            // Buscar un libro
-            string searchTerm;
-            cout << "Enter search term: ";
-            getline(cin, searchTerm);
-            vector<Book> searchResult;
-
-            findBookInCSV(inventory, searchTerm, searchResult);
-            if (searchResult.size() > 0)
-            {
-                for (Book book : searchResult)
-                {
-                    cout << "Title: " << book.title << endl;
-                    cout << "Author: " << book.author << endl;
-                    cout << "Genre: " << book.genre << endl;
-                    cout << "Year: " << book.year << endl;
-                    cout << "ISBN: " << book.ISBN << endl;
-                    cout << "Keywords: " << book.keywords << endl;
-                    cout << "Qualification: " << book.qualification << endl;
-                    cout << "Link: " << book.link << endl;
-                    cout << "-----------------------------------" << endl;
-                }
-            }
-            cout << "Books found: " << searchResult.size() << endl;
-            cout << "-----------------------------------" << endl;
-            break;
-        }
-        case 3:
-        {
-            // Eliminar un libro
-            string searchTerm;
-            cout << "Enter the search term (could be part of any field): ";
-            getline(cin, searchTerm);
-
-            deleteBookFromCSV(inventory, searchTerm);
-            break;
-        }
-        case 4:
-            cout << "Exiting the program.\n";
-            break;
-        default:
-            cout << "Invalid choice. Please try again.\n";
-        }
-    } while (choice != 4);
+    string result = input;
+    transform(result.begin(), result.end(), result.begin(), [](unsigned char c)
+              { return tolower(c); });
+    return result;
 }
 
 vector<string> parseCSVline(const string &line)
@@ -386,19 +553,3 @@ vector<string> parseCSVline(const string &line)
     return fields;
 }
 
-bool confirmAction(const string &message)
-{
-    char confirmation;
-    cout << message << " (y/n): ";
-    cin >> confirmation;
-    cin.ignore(); // Limpiar buffer
-    return confirmation == 'y' || confirmation == 'Y';
-}
-
-string toLowerCase(const string &input)
-{
-    string result = input;
-    transform(result.begin(), result.end(), result.begin(), [](unsigned char c)
-              { return tolower(c); });
-    return result;
-}
