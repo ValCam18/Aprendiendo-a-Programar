@@ -5,8 +5,11 @@
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
+#include <windows.h>
+#include <cctype>
 using namespace std;
 
+HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 struct Book
 {
     string title;
@@ -34,6 +37,8 @@ bool confirmAction(const string &message);
 Book mapLineToBook(const string &line);
 string toLowerCase(const string &input);
 vector<string> parseCSVline(const string &line);
+// Dyes the console with colors
+void color(int color);
 
 int main()
 {
@@ -52,12 +57,18 @@ void showMenu(const string &inventory)
     do
     {
         // Mostrar menú de opciones
-        cout << "\nMenu:\n";
+        color(11);
+        cout << "----- Nomada's Virtual Library -----\n";
+        color(15);
         cout << "1. Find a book\n";
         cout << "2. Top rated books\n";
         cout << "3. Wishlist\n";
+        color(8);
         cout << "4. Exit\n";
+        color(15);
+        color(11);
         cout << "Enter your choice: ";
+        color(15);
         getline(cin, input);
 
         try
@@ -67,7 +78,9 @@ void showMenu(const string &inventory)
         }
         catch (const exception &)
         {
+            color(12);
             cout << "Invalid input. Please enter a number.\n";
+            color(15);
             continue;
         }
 
@@ -77,10 +90,14 @@ void showMenu(const string &inventory)
         {
             // Buscar un libro
             string searchTerm;
+            color(14);
             cout << "Enter search term: ";
+            color(15);
             getline(cin, searchTerm);
             vector<Book> searchResult;
-
+            color(8);
+            cout << "------------------------------------" << endl;
+            color(15);
             findBookInCSV(inventory, searchTerm, searchResult);
             if (searchResult.size() > 0)
             {
@@ -94,11 +111,18 @@ void showMenu(const string &inventory)
                     cout << "Keywords: " << book.keywords << endl;
                     cout << "Qualification: " << book.qualification << endl;
                     cout << "Link: " << book.link << endl;
-                    cout << "-----------------------------------" << endl;
+                    color(8);
+                    cout << "------------------------------------" << endl;
+                    color(15);
                 }
             }
-            cout << "Books found: " << searchResult.size() << endl;
-            cout << "-----------------------------------" << endl;
+            color(14);
+            cout << "Books found: ";
+            color(15);
+            cout << searchResult.size() << endl;
+            color(8);
+            cout << "------------------------------------" << endl;
+            color(15);
             break;
         }
         case 2:
@@ -114,25 +138,42 @@ void showMenu(const string &inventory)
             addWishList(wishlist);
             break;
         case 4:
+            color(5);
             cout << "Exiting the program.\n";
+            color(15);
             break;
         case 88:
-            cout << "-----------------------------------" << endl;
-            cout << "Admin's Menu" << endl;
-            cout << "Enter admin's password: " << endl;
+            color(8);
+            cout << "\n------------------------------------" << endl;
+            color(15);
+            color(1);
+            cout << "------- Admin's section ONLY -------" << endl;
+            color(15);
+            color(6);
+            cout << "Enter admin's password: ";
+            color(15);
             getline(cin, adminPassword);
 
             if (adminPassword == "adminpass")
             {
                 do
                 {
-                    cout << "-----------------------------------" << endl;
+                    color(8);
+                    cout << "------------------------------------" << endl;
+                    color(15);
+                    color(1);
+                    cout << "----------- Admin's Menu -----------" << endl;
+                    color(15);
                     cout << "1. Add a book to inventory" << endl;
                     cout << "2. Remove a book from inventory" << endl;
                     cout << "3. Show Wishlist" << endl;
                     cout << "4. Remove a book from Wishlist" << endl;
+                    color(8);
                     cout << "5. Back to the main menu." << endl;
+                    color(15);
+                    color(14);
                     cout << "Enter your choice: ";
+                    color(15);
                     cin >> adminChoice;
                     cin.ignore();
 
@@ -140,8 +181,12 @@ void showMenu(const string &inventory)
                     {
                     case 1:
                     {
+                        color(8);
+                        cout << "------------------------------------" << endl;
+                        color(15);
                         // Agregar un libro
                         Book newBook;
+                        color(7);
                         cout << "Enter book title: ";
                         getline(cin, newBook.title);
                         cout << "Enter author: ";
@@ -158,7 +203,7 @@ void showMenu(const string &inventory)
                         getline(cin, newBook.qualification);
                         cout << "Enter link: ";
                         getline(cin, newBook.link);
-
+                        color(15);
                         addBookToCSV(inventory, newBook);
                         break;
                     }
@@ -166,20 +211,20 @@ void showMenu(const string &inventory)
                     {
                         // Eliminar un libro
                         string searchTerm;
+                        color(8);
+                        cout << "------------------------------------" << endl;
                         cout << "Enter the search term (could be part of any field): ";
+                        color(15);
                         getline(cin, searchTerm);
 
                         deleteBookFromCSV(inventory, searchTerm);
                         break;
                     }
                     case 3:
-                        // Show Wishlist
                         showWishlist(wishlist);
-
                         break;
                     case 4:
                     {
-                        // Remove a book from Wishlist
                         string searchTerm;
                         cout << "Enter the search term (could be part of any field): ";
                         getline(cin, searchTerm);
@@ -188,21 +233,32 @@ void showMenu(const string &inventory)
                         break;
                     }
                     case 5:
+                        color(7);
                         cout << "-----------------------------------" << endl;
+                        color(15);
                         break;
                     default:
+                        color(12);
                         cout << "Invalid choice. Please try again.\n";
+                        color(15);
                         break;
                     }
                 } while (adminChoice != 5);
             }
             else
             {
+                color(12);
                 cout << "Invalid password. Try again." << endl;
+                color(15);
+                color(8);
+                cout << "------------------------------------" << endl;
+                color(15);
             }
             break;
         default:
+            color(12);
             cout << "Invalid choice. Please try again.\n";
+            color(15);
             break;
         }
     } while (choice != 4);
@@ -213,7 +269,9 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
     ifstream file(inventory);
     if (!file)
     {
+        color(12);
         cerr << "Error: Unable to open file.\n";
+        color(15);
         return;
     }
 
@@ -240,7 +298,7 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
         book.qualification = fields[6];
         book.link = fields[7];
 
-        if (containsSearchTerm(book, searchTerm))
+        if (containsSearchTerm(book, lowerSearchTerm))
         {
             searchResult.push_back(book); // Si coincide con el término de búsqueda, lo agregamos a los resultados
         }
@@ -254,7 +312,9 @@ void showTopRatedBooks(const string &inventory, int numberTop)
     ifstream file(inventory);
     if (!file)
     {
+        color(12);
         cerr << "Error: Unable to open file.\n";
+        color(15);
         return;
     }
 
@@ -292,12 +352,18 @@ void showTopRatedBooks(const string &inventory, int numberTop)
 
     int topMax = booksToRate.size() < numberTop ? booksToRate.size() : numberTop;
 
-    cout << "\n-----Top Rated Books-----\n";
+    color(10);
+    cout << "\n------------- TOP BOOKS ------------\n";
+    color(15);
+    color(8);
+    cout << "------------------------------------" << endl;
+    color(15);
 
     for (int i = 0; i < topMax; i++)
     {
         int index = indexQualificationPairs[i].first;
         Book book = booksToRate[index];
+        color(7);
         cout << "Top " << i + 1 << ":" << endl;
         cout << "Title: " << book.title << endl;
         cout << "Author: " << book.author << endl;
@@ -307,20 +373,33 @@ void showTopRatedBooks(const string &inventory, int numberTop)
         cout << "Keywords: " << book.keywords << endl;
         cout << "Qualification: " << book.qualification << endl;
         cout << "Link: " << book.link << endl;
-        cout << "-----------------------------------" << endl;
+        color(15);
+        color(8);
+        cout << "------------------------------------" << endl;
+        color(15);
     }
 }
 
 void addWishList(const string &wishList)
 {
+    color(8);
+    cout << "------------------------------------" << endl;
+    color(15);
+    color(14);
     cout << "You can add a book to your wish list.\n";
-
+    color(15);
     Book desiredBook;
+    color(7);
     cout << "Enter book title: ";
+    color(15);
     getline(cin, desiredBook.title);
+    color(7);
     cout << "Enter author: ";
+    color(15);
     getline(cin, desiredBook.author);
+    color(7);
     cout << "Enter genre: ";
+    color(15);
     getline(cin, desiredBook.genre);
 
     try
@@ -336,8 +415,12 @@ void addWishList(const string &wishList)
                           desiredBook.genre + "\"\n";
 
         file << bookLine;
+        color(10);
         cout << "Book added to your wish list successfully.\n";
-
+        color(15);
+        color(8);
+        cout << "------------------------------------" << endl;
+        color(15);
         file.close();
     }
     catch (const exception &e)
@@ -374,7 +457,9 @@ void addBookToCSV(const string &inventory, const Book &book)
                           book.link + "\"\n";
 
         file << bookLine; // Agrega la nueva línea al archivo
+        color(10);
         cout << "Book added successfully." << endl;
+        color(15);
 
         file.close();
     }
@@ -414,25 +499,42 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
 
     if (booksFound.empty())
     {
+        color(12);
         cout << "No book found with the search term: " << searchTerm << endl;
+        color(15);
         return false;
     }
 
     // Mostrar los libros encontrados
-    cout << "Found " << booksFound.size() << " book(s):\n";
+    color(10);
+    cout << "Found ";
+    color(15);
+    cout << booksFound.size() << " book(s):\n";
     for (size_t i = 0; i < booksFound.size(); ++i)
     {
         Book book = mapLineToBook(booksFound[i]);
+        color(3);
         cout << i + 1 << ". ";
         if (book.ISBN != "")
         {
-            cout << "ISBN: " << book.ISBN << " | ";
+            cout << "ISBN: ";
+            color(15);
+            cout << book.ISBN << " | ";
         }
-        cout << "Title: " << book.title << " | Author: " << book.author << endl;
+        color(3);
+        cout << "Title: ";
+        color(15);
+        cout << book.title;
+        color(3);
+        cout << " | Author: ";
+        color(15);
+        cout << book.author << endl;
     }
 
     // Leer selección del usuario
+    color(8);
     cout << "\nEnter the number(s) of the book(s) you want to delete (separated by spaces): ";
+    color(15);
     string userInput;
     getline(cin, userInput);
 
@@ -451,24 +553,32 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
             }
             else
             {
+                color(12);
                 cerr << "Invalid selection: " << selection << endl;
+                color(15);
             }
         }
         catch (const exception &)
         {
+            color(12);
             cerr << "Invalid input: " << selection << endl;
+            color(15);
         }
     }
 
     if (booksToRemove.empty())
     {
+        color(12);
         cout << "No valid books selected for deletion.\n";
+        color(15);
         return false;
     }
 
     if (!confirmAction("Are you sure you want to delete the selected book(s)?"))
     {
+        color(2);
         cout << "Book(s) not deleted.\n";
+        color(15);
         return false;
     }
 
@@ -476,7 +586,9 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
     ofstream outFile(inventory, ios::trunc);
     if (!outFile)
     {
+        color(12);
         cerr << "Error: Unable to open file for writing.\n";
+        color(15);
         return false;
     }
 
@@ -495,18 +607,28 @@ bool deleteBookFromCSV(const string &inventory, const string &searchTerm)
     }
 
     outFile.close();
+    color(8);
     cout << "Book(s) deleted successfully." << endl;
+    color(15);
     return true; // Aseguramos que se retorna 'true' cuando los libros han sido eliminados con éxito.
 }
 
 void showWishlist(const string &wishList)
 {
-    cout << "The following wishlists have been registered:";
+    color(8);
+    cout << "------------------------------------" << endl;
+    color(15);
+    color(6);
+    cout << "The following wishlists have been registered:\n"
+         << endl;
+    color(15);
 
     ifstream file(wishList);
     if (!file.is_open())
     {
+        color(12);
         cerr << "Error: Unable to open wish list file.\n";
+        color(15);
         return;
     }
 
@@ -522,9 +644,18 @@ void showWishlist(const string &wishList)
         getline(ss, genre, ',');
 
         // Mostrar los valores
-        cout << "Title: " << title << "\n";
-        cout << "Author: " << author << "\n";
-        cout << "Genre: " << genre << "\n\n";
+        color(3);
+        cout << "Title: ";
+        color(15);
+        cout << title << "\n";
+        color(3);
+        cout << "Author: ";
+        color(15);
+        cout << author << "\n";
+        color(3);
+        cout << "Genre: ";
+        color(15);
+        cout << genre << "\n\n";
     }
 
     file.close();
@@ -537,11 +668,19 @@ void removeWishList(const string &wishList, const string &keyword)
 
     if (!result)
     {
+        color(2);
         cout << "No books were deleted.\n";
+        color(15);
     }
     else
     {
-        cout << "Books matching the keyword '" << keyword << "' have been deleted from your wish list.\n";
+        color(12);
+        cout << "Books matching the keyword '";
+        color(15);
+        cout << keyword;
+        color(12);
+        cout << "' have been deleted from your wish list.\n";
+        color(15);
     }
 }
 
@@ -561,7 +700,9 @@ bool containsSearchTerm(Book book, string searchTerm)
 bool confirmAction(const string &message)
 {
     char confirmation;
+    color(12);
     cout << message << " (y/n): ";
+    color(15);
     cin >> confirmation;
     cin.ignore(); // Limpiar buffer
     return confirmation == 'y' || confirmation == 'Y';
@@ -627,4 +768,9 @@ vector<string> parseCSVline(const string &line)
     }
     fields.push_back(field); // Agrega el último campo
     return fields;
+}
+
+void color(int color)
+{
+    SetConsoleTextAttribute(hConsole, color);
 }
