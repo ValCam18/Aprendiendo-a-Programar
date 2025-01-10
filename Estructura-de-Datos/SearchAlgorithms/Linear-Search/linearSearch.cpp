@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <windows.h>
 #include <cctype>
+#include <limits>
 using namespace std;
 
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -98,11 +99,14 @@ void showMenu(const string &inventory)
             color(8);
             cout << "------------------------------------" << endl;
             color(15);
+            color(10);
+            cout << "------------ FOUND BOOKS -----------" << endl;
+            color(15);
             findBookInCSV(inventory, searchTerm, searchResult);
             if (searchResult.size() > 0)
             {
                 for (Book book : searchResult)
-                {
+                {   
                     cout << "Title: " << book.title << endl;
                     cout << "Author: " << book.author << endl;
                     cout << "Genre: " << book.genre << endl;
@@ -128,7 +132,12 @@ void showMenu(const string &inventory)
         case 2:
         {
             int numberTop;
+            color(8);
+            cout << "------------------------------------" << endl;
+            color(15);
+            color(14);
             cout << "How many top books would you like to see? ";
+            color(15);
             cin >> numberTop;
             cin.ignore();
             showTopRatedBooks(inventory, numberTop);
@@ -177,6 +186,15 @@ void showMenu(const string &inventory)
                     cin >> adminChoice;
                     cin.ignore();
 
+                    if(cin.fail()) 
+                    {   
+                        color(12);
+                        cout << "Invalid entry." << endl;
+                        color(15);
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        continue;
+                    }
                     switch (adminChoice)
                     {
                     case 1:
@@ -363,16 +381,13 @@ void showTopRatedBooks(const string &inventory, int numberTop)
     {
         int index = indexQualificationPairs[i].first;
         Book book = booksToRate[index];
-        color(7);
+        color(1);
         cout << "Top " << i + 1 << ":" << endl;
+        color(15);
+        color(7);
         cout << "Title: " << book.title << endl;
         cout << "Author: " << book.author << endl;
-        cout << "Genre: " << book.genre << endl;
-        cout << "Year: " << book.year << endl;
-        cout << "ISBN: " << book.ISBN << endl;
-        cout << "Keywords: " << book.keywords << endl;
         cout << "Qualification: " << book.qualification << endl;
-        cout << "Link: " << book.link << endl;
         color(15);
         color(8);
         cout << "------------------------------------" << endl;
