@@ -22,7 +22,7 @@ struct Book
 // Main functions
 void showMenu(const string &inventory);
 void findBookInCSV(const string &inventory, const string &searchTerm, vector<Book> &searchResult);
-void showTopRatedBooks(const string &inventory);
+void showTopRatedBooks(const string &inventory, int numberTop);
 void addWishList(const string &wishList);
 void addBookToCSV(const string &inventory, const Book &book);
 bool deleteBookFromCSV(const string &inventory, const string &searchTerm);
@@ -102,8 +102,14 @@ void showMenu(const string &inventory)
             break;
         }
         case 2:
-            showTopRatedBooks(inventory);
+        {
+            int numberTop;
+            cout << "How many top books would you like to see? ";
+            cin >> numberTop;
+            cin.ignore();
+            showTopRatedBooks(inventory, numberTop);
             break;
+        }
         case 3:
             addWishList(wishlist);
             break;
@@ -243,7 +249,7 @@ void findBookInCSV(const string &inventory, const string &searchTerm, vector<Boo
     file.close();
 }
 
-void showTopRatedBooks(const string &inventory)
+void showTopRatedBooks(const string &inventory, int numberTop)
 {
     ifstream file(inventory);
     if (!file)
@@ -253,57 +259,55 @@ void showTopRatedBooks(const string &inventory)
     }
 
     string line;
-    Book book;
-    vector<string> validQualifications = {"4.6", "4.7", "4.8", "4.9", "5"};
-    vector<Book> topRatedBooks;
+    vector<Book> booksToRate;
+    vector<pair<int, float>> indexQualificationPairs;
+    int index = 0;
 
+    bool isFirstLineHeader = true;
     while (getline(file, line))
     {
-        vector<string> fields = parseCSVline(line);
-
-        if (fields.size() != 8)
+        if (isFirstLineHeader)
         {
+            isFirstLineHeader = false;
             continue;
         }
 
-        book.title = fields[0];
-        book.author = fields[1];
-        book.genre = fields[2];
-        book.year = fields[3];
-        book.ISBN = fields[4];
-        book.keywords = fields[5];
-        book.qualification = fields[6];
-        book.link = fields[7];
+        Book book = mapLineToBook(line);
 
-        if (find(validQualifications.begin(), validQualifications.end(), book.qualification) != validQualifications.end())
-        {
-            topRatedBooks.push_back(book);
-        }
+        float qualification = stof(book.qualification);
+
+        // Agregar pares al vector
+        indexQualificationPairs.push_back(make_pair(index, qualification));
+
+        booksToRate.push_back(book);
+        index++;
     }
-
     file.close();
 
-    // Mostrar los libros encontrados
-    if (topRatedBooks.empty())
+    sort(indexQualificationPairs.begin(), indexQualificationPairs.end(),
+         [](const pair<int, float> &a, const pair<int, float> &b)
+         {
+             return a.second > b.second; // Ordenar de mayor a menor por 'second' (float)
+         });
+
+    int topMax = booksToRate.size() < numberTop ? booksToRate.size() : numberTop;
+
+    cout << "\n-----Top Rated Books-----\n";
+
+    for (int i = 0; i < topMax; i++)
     {
-        cout << "No books found with a qualification higher than 4.5.\n";
-    }
-    else
-    {
-        cout << "\n-----Top Rated Books-----\n";
-        for (const auto &book : topRatedBooks)
-        {
-            cout << "Title: " << book.title << endl;
-            cout << "Author: " << book.author << endl;
-            cout << "Genre: " << book.genre << endl;
-            cout << "Year: " << book.year << endl;
-            cout << "ISBN: " << book.ISBN << endl;
-            cout << "Keywords: " << book.keywords << endl;
-            cout << "Qualification: " << book.qualification << endl;
-            cout << "Link: " << book.link << endl;
-            cout << "-----------------------------------" << endl;
-        }
-        cout << "Total books found: " << topRatedBooks.size() << endl;
+        int index = indexQualificationPairs[i].first;
+        Book book = booksToRate[index];
+        cout << "Top " << i + 1 << ":" << endl;
+        cout << "Title: " << book.title << endl;
+        cout << "Author: " << book.author << endl;
+        cout << "Genre: " << book.genre << endl;
+        cout << "Year: " << book.year << endl;
+        cout << "ISBN: " << book.ISBN << endl;
+        cout << "Keywords: " << book.keywords << endl;
+        cout << "Qualification: " << book.qualification << endl;
+        cout << "Link: " << book.link << endl;
+        cout << "-----------------------------------" << endl;
     }
 }
 
